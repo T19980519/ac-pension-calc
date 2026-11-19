@@ -253,7 +253,7 @@ details .grid2{margin-top:12px}
         <div class="field"><label for="infl" data-i="infl">물가상승률 (%)</label><input id="infl" type="number" step="0.1" value="2"></div>
         <div class="field"><label for="idx" data-i="idx">은퇴 후 회사연금 물가연동 (%/년) ⚠️</label><input id="idx" type="number" step="0.1" value="0"></div>
         <div class="field"><label for="meppRate" data-i="meppRate">MEPP 적립률 (기여금 $1당 연금 %) ⚠️</label><input id="meppRate" type="number" step="0.005" value="1.265"></div>
-        <div class="field"><label for="meppC" data-i="meppC">MEPP 총 기여율 (연봉 대비 %) ⚠️</label><input id="meppC" type="number" step="0.5" value="11"></div>
+        <div class="field"><label for="meppC" data-i="meppC">MEPP 총 기여율 (연봉 대비 %) ⚠️</label><input id="meppC" type="number" step="0.5" value="10.5"></div>
         <div class="field"><label for="meppNow" data-i="meppNow">MEPP 현재까지 적립 연금 ($/월)</label><input id="meppNow" type="number" step="10" value="0"></div>
         <div class="field"><label for="oasMax" data-i="oasMax">OAS 최대 월액 ($)</label><input id="oasMax" type="number" step="0.01" value="762.50"></div>
       </div>
@@ -276,12 +276,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.28</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.29</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.28</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.29</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -446,7 +446,7 @@ details .grid2{margin-top:12px}
     const saved = JSON.parse(localStorage.getItem(KEY) || "null");
     if (saved) {
       ids.forEach(k => { if (saved[k] !== undefined) $(k).value = saved[k]; });
-      if (String(saved.meppC) === "10") $("meppC").value = "11"; // old default (before 1.6.28)
+      if (["10","11"].includes(String(saved.meppC))) $("meppC").value = "10.5"; // old defaults (before 1.6.29)
       if (saved.plan) { plan = saved.plan; planTouched = !!saved.planTouched; }
       // hire date counts as entered only if the person changed it (older saves: anything but today's date)
       hireSet = saved.hireSet !== undefined ? !!saved.hireSet : (saved.hire && saved.hire !== $("hire").value);
@@ -793,7 +793,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.28";
+  const APP_VERSION = "1.6.29";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

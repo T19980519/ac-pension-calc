@@ -112,8 +112,6 @@ details .grid2{margin-top:12px}
 .upd{gap:10px}
 .upd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .upd-row .apply{padding:10px 16px}
-.updnotes{margin:0;padding-left:18px;font-size:13px;color:var(--muted);display:flex;flex-direction:column;gap:4px}
-.updnotes b{color:var(--ink)}
 .info{gap:10px}
 .info details:first-of-type{border-top:0;padding-top:0}
 .steps{margin:10px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
@@ -127,7 +125,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.5.0</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.5.1</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -236,11 +234,10 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.5.0</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.5.1</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
-    <ul class="updnotes" id="updNotes" hidden></ul>
   </section>
 </div>
 
@@ -283,7 +280,7 @@ details .grid2{margin-top:12px}
       rContrib:"실제 본인 기여율 (공제액 ÷ 총급여)",
       cOk:p=>`두 화면 금액 차이 ${p}%: 서로 맞습니다.`, cBad:p=>`두 화면 금액 차이 ${p}%: 숫자를 한 번 확인해 주세요. (기여율이 다르거나 공제 안 되는 수당이 있을 수 있습니다)`,
       cMEPP:"MEPP는 공제액이 본인 기여금이라 총급여 − 이익배분금으로 연봉을 계산합니다.",
-      updH:"앱 업데이트", updNow:"지금 버전", updBtn:"업데이트 확인", uChk:"새 버전 확인 중…", uLatest:v=>`최신 버전입니다 (${v}).`, uNew:v=>`새 버전 ${v}이 있습니다. 버튼을 누르면 바로 바뀝니다. 입력값은 그대로 남습니다.`, uGo:"지금 업데이트", uFail:"확인하지 못했습니다. 인터넷 연결을 확인해 주세요.", uRel:"업데이트하는 중…", uNotes:"최근 변경 내용",
+      updH:"앱 업데이트", updNow:"지금 버전", updBtn:"업데이트 확인", uChk:"새 버전 확인 중…", uLatest:v=>`최신 버전입니다 (${v}).`, uNew:v=>`새 버전 ${v}이 있습니다. 버튼을 누르면 바로 바뀝니다. 입력값은 그대로 남습니다.`, uGo:"지금 업데이트", uFail:"확인하지 못했습니다. 인터넷 연결을 확인해 주세요.", uRel:"업데이트하는 중…",
       sApplied:"최근 연봉에 넣었습니다.", days:d=>`${d}일`,
       disc:"공개 자료를 바탕으로 한 <b>추정치</b>입니다. 세금 공제 전 금액이며, 실제 연금은 에어캐나다 Pension Centre 공식 명세서와 퇴직 견적이 기준입니다. 출처: " + SRC,
       // dynamic
@@ -333,7 +330,7 @@ details .grid2{margin-top:12px}
       rContrib:"Actual contribution rate (deduction ÷ gross)",
       cOk:p=>`The two screens differ by ${p}%: they match.`, cBad:p=>`The two screens differ by ${p}%: please check the numbers. (The rate may differ, or some pay isn't pensionable.)`,
       cMEPP:"For MEPP the deduction is your own contribution, so pay is based on gross minus profit sharing.",
-      updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…", uNotes:"Recent changes",
+      updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…",
       sApplied:"Added to recent annual pay.", days:d=>`${d} days`,
       disc:"This is an <b>estimate</b> based on public information, before tax. Your official Air Canada pension statement and retirement quote are what count. Sources: " + SRC,
       need:"Enter your date of birth and hire date.", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
@@ -653,7 +650,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.5.0";
+  const APP_VERSION = "1.5.1";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){
@@ -666,9 +663,6 @@ details .grid2{margin-top:12px}
     else if (latest) s.textContent = T("uLatest")("v"+APP_VERSION);
     else s.textContent = "";
     if (!(latest && cmpVer(latest.version, APP_VERSION) > 0)) btn.textContent = T("updBtn");
-    const notes = latest && latest.notes && latest.notes[lang];
-    $("updNotes").hidden = !notes;
-    if (notes) $("updNotes").innerHTML = `<li><b>${T("uNotes")}</b></li>` + latest.notes[lang].map(n => `<li>${n}</li>`).join("");
   }
   async function checkUpdate(quiet){
     if (!quiet) { updState = "chk"; showUpd(); }

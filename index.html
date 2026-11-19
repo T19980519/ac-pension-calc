@@ -133,7 +133,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.3</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.4</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -247,12 +247,12 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.3</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.4</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.3</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.4</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -584,14 +584,18 @@ details .grid2{margin-top:12px}
   STUB_IDS.forEach(k => $(k).addEventListener("input", stubCalc));
   $("stubApply").addEventListener("click", () => {
     if (!(stubAnnual > 0)) return;
-    const amt = Math.round(stubAnnual);
-    $("salary").value = amt; run();
-    const box = $("appliedMsg");
-    box.innerHTML = `<span class="chk" aria-hidden="true">✓</span><span>${T("sAppliedTo")(money(amt))}</span>`;
-    box.hidden = false;
+    appliedAmt = Math.round(stubAnnual);
+    $("salary").value = appliedAmt; run();
+    showApplied(); $("appliedMsg").hidden = false;
     const s = $("salary"); s.classList.remove("flash"); void s.offsetWidth; s.classList.add("flash");
   });
-  ["salary","raise"].forEach(k => $(k).addEventListener("input", () => { $("appliedMsg").hidden = true; }));
+  ["salary","raise"].forEach(k => $(k).addEventListener("input", () => { $("appliedMsg").hidden = true; appliedAmt = 0; }));
+  let appliedAmt = 0;
+  // Rebuilt on every language switch so the message always matches KOR/ENG.
+  function showApplied(){
+    if (!appliedAmt) return;
+    $("appliedMsg").innerHTML = `<span class="chk" aria-hidden="true">✓</span><span>${T("sAppliedTo")(money(appliedAmt))}</span>`;
+  }
   function showOcr(){ $("ocrStatus").textContent = ocrMsg ? ocrMsg() : ""; }
 
   const AMT = /\$?\s?(\d{1,3}(?:[,.]\d{3})+|\d+)[.,](\d{2})(?!\d)/g;
@@ -665,14 +669,14 @@ details .grid2{margin-top:12px}
     }
     e.target.value = "";
   });
-  $("langKO").addEventListener("click", () => { showOcr(); stubCalc(); });
-  $("langEN").addEventListener("click", () => { showOcr(); stubCalc(); });
+  $("langKO").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); });
+  $("langEN").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); });
   $("planDB").addEventListener("click", stubCalc);
   $("planMEPP").addEventListener("click", stubCalc);
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.3";
+  const APP_VERSION = "1.6.4";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

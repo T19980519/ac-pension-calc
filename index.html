@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>나의 연금 계산기</title>
 <meta name="description" content="Personal pension (DB or MEPP) + CPP + OAS estimator. Unofficial. All data stays on your phone.">
-<meta name="theme-color" content="#D9480F">
+<meta name="theme-color" content="#D2232A">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
@@ -20,18 +20,18 @@
 /* Layout: one narrow column like a ramp checklist card; inputs on top, scenario "gate cards" below. */
 :root{
   --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16212E; --muted:#5B6878; --line:#D3DAE2;
-  --accent:#D9480F; --accent-ink:#FFFFFF; --soft:#FFF1E8;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#FDECEC;
   --good:#1F7A4D; --good-bg:#E3F4EA; --warn:#9A5B00; --warn-bg:#FFF3D6; --bad:#B42318; --bad-bg:#FDE7E5;
   --f-display:"Barlow Semi Condensed","Noto Sans KR",system-ui,sans-serif;
   --f-body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
-  --accent:#FF7A3D; --accent-ink:#1A0D05; --soft:#2A1E17;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719;
   --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
-  --accent:#FF7A3D; --accent-ink:#1A0D05; --soft:#2A1E17;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719;
   --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
@@ -108,7 +108,7 @@ details .grid2{margin-top:12px}
 /* working panel (same look and motion as the realtor app's "AI draft" screen) */
 .working{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--surface),var(--soft));box-shadow:0 14px 30px -22px color-mix(in srgb,var(--accent) 80%,transparent)}
 .working[hidden]{display:none}
-.working:not([hidden]) + #ocrStatus{display:none}
+.working:not([hidden]):not(.fin) + #ocrStatus{display:none}
 .working-head{display:flex;gap:12px;align-items:center}
 .working-head b{font-size:15px}
 .spinner{flex:none;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,color-mix(in srgb,var(--accent) 70%,#000) 120deg,color-mix(in srgb,var(--accent) 35%,#fff) 240deg,var(--accent) 360deg);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));animation:spin .9s linear infinite}
@@ -156,7 +156,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.9</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.10</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -271,12 +271,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.9</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.10</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.9</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.10</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -310,7 +310,7 @@ details .grid2{margin-top:12px}
       stubHelp:"급여 앱의 <b>Deductions (YTD)</b> 화면은 꼭 올려 주세요. 연금 공제액이 있습니다. <b>Gross Earnings (YTD)</b> 화면도 올리면 금액을 서로 맞춰 봅니다. 이미지는 이 폰 안에서만 읽고 어디에도 보내지 않으며, 읽은 금액도 저장하지 않습니다. 읽은 숫자는 아래에서 직접 고칠 수 있습니다.",
       sAsOf:"명세서 누적 기준일 (마지막 급여일)", sRate:"본인 연금 기여율 (%)", sPen:"연금 공제액 YTD ($)", sGross:"총급여 YTD ($, 선택)", sPS:"이익배분금 YTD ($, 선택)",
       sApply:"이 금액을 최근 연봉에 넣기", phPen:"예) 2,500.00", phGross:"예) 50,000.00", phPS:"예) 1,000.00",
-      wTitle:"명세서를 읽는 중입니다", wDone:"다 읽었습니다", wSub:t=>`경과 ${t} · 보통 10~30초 걸려요. 화면을 닫지 말고 기다려 주세요.`,
+      wTitle:"명세서를 읽는 중입니다", wDone:"다 읽었습니다", wTook:t=>`걸린 시간 ${t} · 아래 칸에 읽은 금액을 채웠습니다.`, wSub:t=>`경과 ${t} · 보통 10~30초 걸려요. 화면을 닫지 말고 기다려 주세요.`,
       wSteps:["글자 인식 준비하는 중", (i,n,p)=>`명세서 읽는 중${n>1?` (${i}/${n})`:""}${p!=null?` ${p}%`:""}`, "연금 공제액·총급여 찾는 중", "연봉으로 환산하는 중"],
       oLoad:"글자 인식 준비 중… (처음 한 번은 몇 초 걸립니다)", oRead:(i,n,p)=>`${n}장 중 ${i}번째 읽는 중… ${p}%`,
       oDone:f=>`읽기 완료: ${f.join(", ") || "찾은 항목 없음. 숫자를 직접 입력해 주세요."}`, oFail:"이 폰에서 글자 인식을 실행하지 못했습니다. 숫자를 직접 입력해 주세요.",
@@ -362,7 +362,7 @@ details .grid2{margin-top:12px}
       stubHelp:"Upload the <b>Deductions (YTD)</b> screen from your pay app. It has your pension deduction. Add the <b>Gross Earnings (YTD)</b> screen too and the app will cross-check the amounts. Images are read only on this phone and never sent anywhere, and the amounts aren't saved. You can correct any number below.",
       sAsOf:"Year-to-date as of (last pay date)", sRate:"Your pension contribution rate (%)", sPen:"Pension deduction YTD ($)", sGross:"Gross earnings YTD ($, optional)", sPS:"Profit sharing YTD ($, optional)",
       sApply:"Use this as my recent annual pay", phPen:"e.g. 2,500.00", phGross:"e.g. 50,000.00", phPS:"e.g. 1,000.00",
-      wTitle:"Reading your pay stub", wDone:"All read", wSub:t=>`Elapsed ${t} · Usually 10–30 seconds. Please keep this screen open.`,
+      wTitle:"Reading your pay stub", wDone:"All read", wTook:t=>`Took ${t} · The amounts are filled in below.`, wSub:t=>`Elapsed ${t} · Usually 10–30 seconds. Please keep this screen open.`,
       wSteps:["Getting the text reader ready", (i,n,p)=>`Reading the pay stub${n>1?` (${i}/${n})`:""}${p!=null?` ${p}%`:""}`, "Finding the pension deduction and gross pay", "Converting to yearly pay"],
       oLoad:"Getting text reader ready… (a few seconds the first time)", oRead:(i,n,p)=>`Reading image ${i} of ${n}… ${p}%`,
       oDone:f=>`Done. Found: ${f.join(", ") || "nothing. Please type the numbers in."}`, oFail:"Text reading couldn't run on this phone. Please type the numbers in.",
@@ -681,7 +681,7 @@ details .grid2{margin-top:12px}
     if (!wp) return;
     const sec = Math.floor((Date.now() - wp.t0) / 1000);
     $("wTitle").textContent = wp.done ? T("wDone") : T("wTitle");
-    $("wSub").textContent = T("wSub")(Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"));
+    $("wSub").textContent = T(wp.done ? "wTook" : "wSub")(Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"));
     $("wSteps").innerHTML = T("wSteps").map((l, k) => {
       const cls = wp.done || k < wp.step ? "done" : k === wp.step ? "now" : "";
       const lab = typeof l === "function" ? l(wp.i, wp.n, k === wp.step ? wp.p : null) : l;
@@ -692,7 +692,7 @@ details .grid2{margin-top:12px}
   function wpEnd(ok){
     clearInterval(wpTick);
     if (ok && wp) { wp.done = true; wpRender(); }
-    wpHide = setTimeout(() => { $("work").hidden = true; $("work").classList.remove("fin"); wp = null; }, ok ? 1500 : 0);
+    if (!ok) { $("work").hidden = true; $("work").classList.remove("fin"); wp = null; }
   }
   $("stubFiles").addEventListener("change", async e => {
     const files = [...e.target.files]; if (!files.length) return;
@@ -730,7 +730,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.9";
+  const APP_VERSION = "1.6.10";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

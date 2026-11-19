@@ -47,6 +47,9 @@ header p{margin:4px 0 0;color:var(--muted);font-size:13px}
 .field label{font-size:13px;color:var(--muted);font-weight:500}
 .field input,.field select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
 .field input,.field select{height:46px;-webkit-appearance:none;appearance:none;display:block;max-width:100%;margin:0}
+.ymd{display:grid;grid-template-columns:1.5fr 1fr 1fr;gap:4px;min-width:0}
+.field .ymd select{background-image:none;padding:10px 2px;text-align:center;text-align-last:center;min-width:0}
+input.ymd-src{display:none!important}
 .field input[type="date"]{text-align:left;line-height:24px}
 .field input[type="date"]::-webkit-date-and-time-value{text-align:left;margin:0}
 .field input[type="date"]::-webkit-calendar-picker-indicator{margin:0}
@@ -156,7 +159,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.15</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.16</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -270,12 +273,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.15</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.16</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.15</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.16</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -292,7 +295,7 @@ details .grid2{margin-top:12px}
       title:"나의 연금 계산기",
       sub:"회사 연금 + CPP + OAS 예상액. 금액은 모두 <b>오늘 돈 가치(세전, 월)</b>로 보여줍니다.",
       me:"내 정보", birth:"생년월일", hire:"입사일", birthHint:"생년월일은 예시 값입니다. 본인 날짜로 바꿔 주세요.",
-      plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2012-06-17 이전 입사", planMEPPs:"2012-06-17 이후 입사",
+      yY:"년", yM:"월", yD:"일", plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2012-06-17 이전 입사", planMEPPs:"2012-06-17 이후 입사",
       salary:"최근 연봉 (CAD, 오버타임 포함)", raise:"매년 인상률 (%)", cpp65:"65세 CPP 월 예상액 ($)", cppStart:"CPP 받기 시작 나이",
       cppHint:"CPP 예상액은 My Service Canada Account의 \"65세 예상액\"을 넣는 게 가장 정확합니다. 2026년 최대는 월 $1,507.65입니다.",
       resid:"18세 이후 캐나다 거주 (년, 65세 기준)", oasStart:"OAS 받기 시작 나이", custom:"비교해 볼 다른 은퇴 나이", retDate:"원하는 은퇴 날짜", retHint:"원하는 날짜를 고르면 그날 은퇴했을 때의 결과가 맨 위에 나옵니다.", cDate:"원하는 날짜 은퇴",
@@ -344,7 +347,7 @@ details .grid2{margin-top:12px}
       title:"My Pension Calculator",
       sub:"Estimated company pension + CPP + OAS. All amounts are <b>monthly, before tax, in today's dollars</b>.",
       me:"My details", birth:"Date of birth", hire:"Hire date", birthHint:"The date of birth is a sample. Change it to yours.",
-      plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2012-06-17", planMEPPs:"Hired on/after 2012-06-17",
+      yY:"Year", yM:"Month", yD:"Day", plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2012-06-17", planMEPPs:"Hired on/after 2012-06-17",
       salary:"Recent annual pay (CAD, incl. overtime)", raise:"Yearly raise (%)", cpp65:"CPP at 65, monthly estimate ($)", cppStart:"CPP start age",
       cppHint:"For the most accurate CPP figure, use the \"estimate at 65\" in your My Service Canada Account. The 2026 maximum is $1,507.65 a month.",
       resid:"Years in Canada after age 18 (by 65)", oasStart:"OAS start age", custom:"Another retirement age to compare", retDate:"My retirement date", retHint:"Pick a date to see results for retiring that day, shown first.", cDate:"Retire on my date",
@@ -394,6 +397,45 @@ details .grid2{margin-top:12px}
   };
   const T = k => TX[lang][k];
 
+  /* Year / month / day chosen together: three selects side by side instead of the calendar */
+  const YMD = {birth:[1935,0], hire:[1965,0], sAsOf:[-1,0], retDate:[0,45]};
+  const ymdNative = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
+  const p2 = n => String(n).padStart(2, "0");
+  const ymdBoxes = [];
+  Object.keys(YMD).forEach(id => {
+    const inp = $(id), opt = id === "retDate", cy = new Date().getFullYear();
+    const [a, b] = YMD[id], y0 = a > 1000 ? a : cy + a, y1 = cy + b;
+    const box = document.createElement("div"); box.className = "ymd";
+    const sel = () => { const s = document.createElement("select"); box.appendChild(s); return s; };
+    const sy = sel(), sm = sel(), sd = sel();
+    const opts = (s, from, to, cur, fmt) => {
+      let h = opt || cur === "" ? `<option value="">${opt ? "—" : ""}</option>` : "";
+      for (let v = from; v <= to; v++) h += `<option value="${v}">${fmt(v)}</option>`;
+      s.innerHTML = h; s.value = cur;
+    };
+    const dim = (y, m) => new Date(Date.UTC(y, m, 0)).getUTCDate();
+    function fill(v){
+      const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || "");
+      const Y = m ? +m[1] : "", M = m ? +m[2] : "", D = m ? +m[3] : "";
+      opts(sy, Math.min(y0, Y || y0), Math.max(y1, Y || y1), String(Y), v => v);
+      opts(sm, 1, 12, String(M), p2);
+      opts(sd, 1, Y && M ? dim(Y, M) : 31, String(D), p2);
+    }
+    function pick(){
+      const Y = +sy.value, M = +sm.value; let D = +sd.value;
+      if (Y && M) { const n = dim(Y, M); D = D ? Math.min(D, n) : 1; opts(sd, 1, n, D ? String(D) : "", p2); }
+      const v = Y && M && D ? `${Y}-${p2(M)}-${p2(D)}` : "";
+      if (v || opt) { ymdNative.set.call(inp, v); inp.dispatchEvent(new Event("input", {bubbles: true})); }
+    }
+    [sy, sm, sd].forEach(s => s.addEventListener("change", pick));
+    Object.defineProperty(inp, "value", {configurable: true, get(){ return ymdNative.get.call(this); }, set(v){ ymdNative.set.call(this, v); fill(v); }});
+    inp.classList.add("ymd-src"); inp.after(box);
+    const lab = document.querySelector(`label[for="${id}"]`); if (lab) { sy.id = id + "Y"; lab.htmlFor = sy.id; }
+    fill(ymdNative.get.call(inp));
+    ymdBoxes.push([sy, sm, sd]);
+  });
+  function ymdAria(){ ymdBoxes.forEach(([y, m, d]) => { y.setAttribute("aria-label", T("yY")); m.setAttribute("aria-label", T("yM")); d.setAttribute("aria-label", T("yD")); }); }
+
   // Hire date starts as today's date on this phone until the person enters their own.
   { const n = new Date(); $("hire").value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
   try {
@@ -418,6 +460,7 @@ details .grid2{margin-top:12px}
   }
 
   function applyLang(){
+    ymdAria();
     document.documentElement.lang = lang;
     document.title = T("title");
     document.querySelectorAll("[data-i]").forEach(el => { el.innerHTML = T(el.dataset.i); });
@@ -734,7 +777,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.15";
+  const APP_VERSION = "1.6.16";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

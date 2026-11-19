@@ -156,7 +156,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.12</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.13</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -216,7 +216,6 @@ details .grid2{margin-top:12px}
         </div>
         <table class="rows" id="stubOut"></table>
         <div class="hint" id="stubCheck"></div>
-        <button type="button" class="apply" id="stubApply" data-i="sApply" disabled>이 금액을 최근 연봉에 넣기</button>
         <div class="applied" id="appliedMsg" role="status" hidden></div>
       </div>
     </details>
@@ -271,12 +270,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.12</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.13</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.12</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.13</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -606,16 +605,17 @@ details .grid2{margin-top:12px}
     }
     $("stubOut").innerHTML = rows.map(([a,b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join("");
     $("stubCheck").textContent = check; $("stubCheck").className = cls;
-    $("stubApply").disabled = !(stubAnnual > 0);
   }
-  STUB_IDS.forEach(k => $(k).addEventListener("input", stubCalc));
-  $("stubApply").addEventListener("click", () => {
+  /* the annualized amount goes into recent pay automatically (no button) */
+  let applyT = null;
+  STUB_IDS.forEach(k => $(k).addEventListener("input", () => { stubCalc(); clearTimeout(applyT); applyT = setTimeout(applyStub, 700); }));
+  function applyStub(){
     if (!(stubAnnual > 0)) return;
     appliedAmt = Math.round(stubAnnual);
     $("salary").value = appliedAmt; run();
     showApplied(); $("appliedMsg").hidden = false;
     const s = $("salary"); s.classList.remove("flash"); void s.offsetWidth; s.classList.add("flash");
-  });
+  }
   ["salary","raise"].forEach(k => $(k).addEventListener("input", () => { $("appliedMsg").hidden = true; appliedAmt = 0; }));
   let appliedAmt = 0;
   // Rebuilt on every language switch so the message always matches KOR/ENG.
@@ -718,7 +718,7 @@ details .grid2{margin-top:12px}
       if (found.ps != null) $("sPS").value = found.ps.toFixed(2);
       const names = () => [["pen","fPen"],["gross","fGross"],["ps","fPS"]].filter(([k]) => found[k] != null).map(([k,l]) => `${T(l)} ${money(found[k])}`);
       wpStep(3); ocrMsg = () => T("oDone")(names()); showOcr(); stubCalc(); wpEnd(true);
-      if (stubAnnual > 0) $("stubApply").click(); // put the amount into recent pay automatically
+      applyStub();
     } catch (err) {
       console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr(); wpEnd(false);
     }
@@ -731,7 +731,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.12";
+  const APP_VERSION = "1.6.13";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

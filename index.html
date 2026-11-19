@@ -156,7 +156,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.14</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.15</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -270,12 +270,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.14</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.15</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.14</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.15</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -285,7 +285,7 @@ details .grid2{margin-top:12px}
   const $ = id => document.getElementById(id);
   const ids = ["birth","hire","salary","raise","cpp65","cppStart","resid","oasStart","custom","retDate","ympe","ympeG","cap","maxPer","ded","infl","idx","meppRate","meppC","meppNow","oasMax"];
   const KEY = "ac-pension-calc-v1";
-  let plan = "DB", planTouched = false, lang = "ko";
+  let plan = "DB", planTouched = false, hireSet = false, lang = "ko";
 
   const TX = {
     ko: {
@@ -401,6 +401,9 @@ details .grid2{margin-top:12px}
     if (saved) {
       ids.forEach(k => { if (saved[k] !== undefined) $(k).value = saved[k]; });
       if (saved.plan) { plan = saved.plan; planTouched = !!saved.planTouched; }
+      // hire date counts as entered only if the person changed it (older saves: anything but today's date)
+      hireSet = saved.hireSet !== undefined ? !!saved.hireSet : (saved.hire && saved.hire !== $("hire").value);
+      if (!hireSet && !planTouched) plan = "DB";
       if (saved.birthSet) $("birthHint").hidden = true;
       if (saved.lang === "en") lang = "en";
     }
@@ -408,7 +411,7 @@ details .grid2{margin-top:12px}
 
   function save(){
     try {
-      const o = {plan, planTouched, lang, birthSet: $("birthHint").hidden};
+      const o = {plan, planTouched, hireSet, lang, birthSet: $("birthHint").hidden};
       ids.forEach(k => o[k] = $(k).value);
       localStorage.setItem(KEY, JSON.stringify(o));
     } catch (e) {}
@@ -543,8 +546,8 @@ details .grid2{margin-top:12px}
   function run(){
     const birth = parseD($("birth").value), hire = parseD($("hire").value);
     if (!birth || !hire) { $("cards").innerHTML = `<div class="panel"><p class="note">${T("need")}</p></div>`; return; }
-    if (!planTouched) setPlan(hire.getTime() < SPLIT ? "DB" : "MEPP", false);
-    $("planHint").textContent = (hire.getTime() < SPLIT) === (plan === "DB") ? T("planOk") : T("planDiff");
+    if (!planTouched && hireSet) setPlan(hire.getTime() < SPLIT ? "DB" : "MEPP", false);
+    $("planHint").textContent = !hireSet ? "" : (hire.getTime() < SPLIT) === (plan === "DB") ? T("planOk") : T("planDiff");
     const now = new Date(); const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
     const I = { birth, hire, now: today, plan,
       salary:num("salary"), raise:num("raise")/100, cpp65:num("cpp65"), cppStart:num("cppStart"), resid:num("resid"), oasStart:num("oasStart"),
@@ -573,7 +576,7 @@ details .grid2{margin-top:12px}
     save();
   }
 
-  ids.forEach(k => $(k).addEventListener("input", () => { if (k === "birth") $("birthHint").hidden = true; run(); }));
+  ids.forEach(k => $(k).addEventListener("input", () => { if (k === "birth") $("birthHint").hidden = true; if (k === "hire") hireSet = true; run(); }));
 
   /* ---------- Pay stub reader (on-device OCR) ---------- */
   const STUB_IDS = ["sAsOf","sRate","sPen","sGross","sPS"];
@@ -731,7 +734,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.14";
+  const APP_VERSION = "1.6.15";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

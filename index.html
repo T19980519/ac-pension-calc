@@ -109,6 +109,8 @@ details .grid2{margin-top:12px}
 .apply:disabled{opacity:.45;cursor:default}
 .apply:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
 .hint.bad{color:var(--bad)} .hint.good{color:var(--good)}
+.credit{margin:0;text-align:center;font-size:12px;color:var(--muted);line-height:1.6}
+.nw{white-space:nowrap}
 .upd{gap:10px}
 .upd-row{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
 .upd-row .apply{padding:10px 16px}
@@ -125,7 +127,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.1</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.2</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -238,11 +240,12 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.1</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.2</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.2</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -657,7 +660,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.1";
+  const APP_VERSION = "1.6.2";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

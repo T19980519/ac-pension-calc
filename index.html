@@ -156,7 +156,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.13</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.14</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -191,8 +191,8 @@ details .grid2{margin-top:12px}
     <div class="field">
       <label data-i="plan">연금 플랜</label>
       <div class="seg" role="group" aria-label="Plan">
-        <button type="button" id="planDB" aria-pressed="true"><span data-i="planDB">확정급여 DB</span><small data-i="planDBs">2016-01-22 이전 입사</small></button>
-        <button type="button" id="planMEPP" aria-pressed="false">MEPP<small data-i="planMEPPs">2016-01-22 이후 입사</small></button>
+        <button type="button" id="planDB" aria-pressed="true"><span data-i="planDB">확정급여 DB</span><small data-i="planDBs">2012-06-17 이전 입사</small></button>
+        <button type="button" id="planMEPP" aria-pressed="false">MEPP<small data-i="planMEPPs">2012-06-17 이후 입사</small></button>
       </div>
       <div class="hint" id="planHint"></div>
     </div>
@@ -270,12 +270,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.13</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.14</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.13</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.14</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -292,7 +292,7 @@ details .grid2{margin-top:12px}
       title:"나의 연금 계산기",
       sub:"회사 연금 + CPP + OAS 예상액. 금액은 모두 <b>오늘 돈 가치(세전, 월)</b>로 보여줍니다.",
       me:"내 정보", birth:"생년월일", hire:"입사일", birthHint:"생년월일은 예시 값입니다. 본인 날짜로 바꿔 주세요.",
-      plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2016-01-22 이전 입사", planMEPPs:"2016-01-22 이후 입사",
+      plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2012-06-17 이전 입사", planMEPPs:"2012-06-17 이후 입사",
       salary:"최근 연봉 (CAD, 오버타임 포함)", raise:"매년 인상률 (%)", cpp65:"65세 CPP 월 예상액 ($)", cppStart:"CPP 받기 시작 나이",
       cppHint:"CPP 예상액은 My Service Canada Account의 \"65세 예상액\"을 넣는 게 가장 정확합니다. 2026년 최대는 월 $1,507.65입니다.",
       resid:"18세 이후 캐나다 거주 (년, 65세 기준)", oasStart:"OAS 받기 시작 나이", custom:"비교해 볼 다른 은퇴 나이", retDate:"원하는 은퇴 날짜", retHint:"원하는 날짜를 고르면 그날 은퇴했을 때의 결과가 맨 위에 나옵니다.", cDate:"원하는 날짜 은퇴",
@@ -344,7 +344,7 @@ details .grid2{margin-top:12px}
       title:"My Pension Calculator",
       sub:"Estimated company pension + CPP + OAS. All amounts are <b>monthly, before tax, in today's dollars</b>.",
       me:"My details", birth:"Date of birth", hire:"Hire date", birthHint:"The date of birth is a sample. Change it to yours.",
-      plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2016-01-22", planMEPPs:"Hired on/after 2016-01-22",
+      plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2012-06-17", planMEPPs:"Hired on/after 2012-06-17",
       salary:"Recent annual pay (CAD, incl. overtime)", raise:"Yearly raise (%)", cpp65:"CPP at 65, monthly estimate ($)", cppStart:"CPP start age",
       cppHint:"For the most accurate CPP figure, use the \"estimate at 65\" in your My Service Canada Account. The 2026 maximum is $1,507.65 a month.",
       resid:"Years in Canada after age 18 (by 65)", oasStart:"OAS start age", custom:"Another retirement age to compare", retDate:"My retirement date", retHint:"Pick a date to see results for retiring that day, shown first.", cDate:"Retire on my date",
@@ -435,7 +435,7 @@ details .grid2{margin-top:12px}
   const fmtY = y => { const t = Math.max(0, Math.round(y*12)); return T("yrs")(Math.floor(t/12), t%12); };
   const fmtAge = a => { const t = Math.round(a*12); return T("age")(Math.floor(t/12), t%12); };
 
-  const SPLIT = Date.UTC(2016,0,22);
+  const SPLIT = Date.UTC(2012,5,17); // MEPP for hires/rehires on or after 2012-06-17 (TMOS)
 
   function setPlan(p, user){
     plan = p; if (user) planTouched = true;
@@ -731,7 +731,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.13";
+  const APP_VERSION = "1.6.14";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

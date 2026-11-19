@@ -88,7 +88,7 @@ details .grid2{margin-top:12px}
 .rows tr:last-child td{border-bottom:0}
 .note{font-size:12px;color:var(--muted);line-height:1.6}
 .note b{color:var(--ink)}
-.disclaimer{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.6}
+.legal{margin:0 4px;font-size:12px;line-height:1.6;color:var(--muted);text-align:center}
 @media (max-width:380px){.grid2{grid-template-columns:1fr}.keydates{grid-template-columns:1fr 1fr}}
 @media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
 .tline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-width:0}
@@ -133,7 +133,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.5</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.6</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -244,15 +244,15 @@ details .grid2{margin-top:12px}
     <div class="note" id="method"></div>
   </section>
 
-  <div class="disclaimer" data-i="disc"></div>
+  <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.5</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.6</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.5</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.6</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -264,7 +264,6 @@ details .grid2{margin-top:12px}
   const KEY = "ac-pension-calc-v1";
   let plan = "DB", planTouched = false, lang = "ko";
 
-  const SRC = "Pension plan notice (2026-10), pension seminar notes (2018), TA highlights (2026-06), MEPP information (2026-03), Canada.ca CPP·OAS 2026.";
   const TX = {
     ko: {
       title:"나의 연금 계산기",
@@ -296,7 +295,7 @@ details .grid2{margin-top:12px}
       cMEPP:"MEPP는 공제액이 본인 기여금이라 총급여 − 이익배분금으로 연봉을 계산합니다.",
       updH:"앱 업데이트", updNow:"지금 버전", updBtn:"업데이트 확인", uChk:"새 버전 확인 중…", uLatest:v=>`최신 버전입니다 (${v}).`, uNew:v=>`새 버전 ${v}이 있습니다. 버튼을 누르면 바로 바뀝니다. 입력값은 그대로 남습니다.`, uGo:"지금 업데이트", uFail:"확인하지 못했습니다. 인터넷 연결을 확인해 주세요.", uRel:"업데이트하는 중…",
       sApplied:"최근 연봉에 넣었습니다.", sAppliedTo:m=>`적용 완료! 최근 연봉 칸에 <b>${m}</b>을 넣었습니다. 아래 결과도 새로 계산됐습니다.`, days:d=>`${d}일`,
-      disc:"<b>개인이 만든 참고용 추정 계산기이며, 회사나 노조의 공식 도구가 아닙니다.</b> 실제 연금액은 회사 연금 포털(Alight)에서 확인하세요.<br>공개 자료를 바탕으로 한 세금 공제 전 추정치입니다. 출처: " + SRC,
+      disc:"개인이 만든 참고용 추정 계산기이며, 회사나 노조의 공식 도구가 아닙니다. 실제 연금액은 회사 연금 포털(Alight)에서 확인하세요.",
       // dynamic
       need:"생년월일과 입사일을 입력해 주세요.", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
       kd80:"80점 도달", kd60:"60세", kd65:"65세", past:"지남",
@@ -346,7 +345,7 @@ details .grid2{margin-top:12px}
       cMEPP:"For MEPP the deduction is your own contribution, so pay is based on gross minus profit sharing.",
       updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…",
       sApplied:"Added to recent annual pay.", sAppliedTo:m=>`Done! <b>${m}</b> is now your recent annual pay, and the results below are updated.`, days:d=>`${d} days`,
-      disc:"<b>This is a personal, unofficial estimator. It is not a tool of the company or the union.</b> Check your actual pension on the company pension portal (Alight).<br>Estimates are based on public information, before tax. Sources: " + SRC,
+      disc:"This is a personal, unofficial estimator, not a company or union tool. Check your actual pension on the company pension portal (Alight).",
       need:"Enter your date of birth and hire date.", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
       kd80:"80 points", kd60:"Age 60", kd65:"Age 65", past:"passed",
       c80:"Retire at 80 points", c6025:"Age 60 + 25 years", c25:"25 years of service (after 60)", c60:"Retire at 60", c65:"Retire at 65", cAge:a=>`Retire at ${a}`, nowSfx:" (if you retire now)",
@@ -676,7 +675,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.5";
+  const APP_VERSION = "1.6.6";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

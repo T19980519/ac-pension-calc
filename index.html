@@ -125,7 +125,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.0</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.1</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -178,9 +178,9 @@ details .grid2{margin-top:12px}
         <div class="grid2">
           <div class="field"><label for="sAsOf" data-i="sAsOf">명세서 누적 기준일</label><input id="sAsOf" type="date"></div>
           <div class="field"><label for="sRate" data-i="sRate">본인 연금 기여율 (%)</label><input id="sRate" type="number" inputmode="decimal" step="0.05" value="5.25"></div>
-          <div class="field"><label for="sPen" data-i="sPen">연금 공제액 YTD ($)</label><input id="sPen" type="number" inputmode="decimal" step="0.01"></div>
-          <div class="field"><label for="sGross" data-i="sGross">총급여 YTD ($, 선택)</label><input id="sGross" type="number" inputmode="decimal" step="0.01"></div>
-          <div class="field"><label for="sPS" data-i="sPS">이익배분금 YTD ($, 선택)</label><input id="sPS" type="number" inputmode="decimal" step="0.01"></div>
+          <div class="field"><label for="sPen" data-i="sPen">연금 공제액 YTD ($)</label><input id="sPen" type="number" inputmode="decimal" step="0.01" data-ph="phPen" placeholder="예) 2,500.00"></div>
+          <div class="field"><label for="sGross" data-i="sGross">총급여 YTD ($, 선택)</label><input id="sGross" type="number" inputmode="decimal" step="0.01" data-ph="phGross" placeholder="예) 50,000.00"></div>
+          <div class="field"><label for="sPS" data-i="sPS">이익배분금 YTD ($, 선택)</label><input id="sPS" type="number" inputmode="decimal" step="0.01" data-ph="phPS" placeholder="예) 1,000.00"></div>
         </div>
         <table class="rows" id="stubOut"></table>
         <div class="hint" id="stubCheck"></div>
@@ -238,7 +238,7 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.0</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.1</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
@@ -274,9 +274,9 @@ details .grid2{margin-top:12px}
       andSteps:"<li>이 앱 링크를 <b>Chrome</b>으로 엽니다.</li><li>오른쪽 위 <b>점 3개(⋮) 메뉴</b>를 누릅니다.</li><li><b>\"홈 화면에 추가\"</b> 또는 <b>\"앱 설치\"</b>를 누릅니다.</li><li><b>\"추가\"</b>를 누르면 홈 화면에 아이콘이 생깁니다.</li>",
       privBody:"<b>입력한 숫자와 올린 급여 명세서 이미지는 서버로 보내지 않습니다.</b> 명세서 글자 인식도 이 폰 안에서 처리합니다. 입력값은 이 폰의 브라우저 저장 공간에만 남고, 다른 사람이나 다른 기기에서는 보이지 않습니다.<br><br>앱을 열 때 인터넷에서 받는 것은 앱 화면, 글꼴, 글자 인식 프로그램 같은 <b>앱 파일뿐</b>입니다. 로그인이나 회원가입은 필요 없습니다.<br><br>주의: 브라우저의 방문 기록·사이트 데이터를 지우면 저장된 입력값도 지워집니다. 아이폰에서는 홈 화면 아이콘과 Safari가 저장 공간을 따로 쓰기 때문에 한쪽에서 넣은 값이 다른 쪽에 안 보일 수 있습니다.",
       stubSum:"급여 명세서 이미지로 연봉 채우기", stubPick:"명세서 화면 선택 (여러 장 가능)",
-      stubHelp:"급여 앱의 <b>Deductions (YTD)</b> 화면은 꼭 올려 주세요. 연금 공제액이 있습니다. <b>Gross Earnings (YTD)</b> 화면도 올리면 금액을 서로 맞춰 봅니다. 이미지는 이 폰 안에서만 읽고 어디에도 보내지 않습니다. 읽은 숫자는 아래에서 직접 고칠 수 있습니다.",
+      stubHelp:"급여 앱의 <b>Deductions (YTD)</b> 화면은 꼭 올려 주세요. 연금 공제액이 있습니다. <b>Gross Earnings (YTD)</b> 화면도 올리면 금액을 서로 맞춰 봅니다. 이미지는 이 폰 안에서만 읽고 어디에도 보내지 않으며, 읽은 금액도 저장하지 않습니다. 읽은 숫자는 아래에서 직접 고칠 수 있습니다.",
       sAsOf:"명세서 누적 기준일 (마지막 급여일)", sRate:"본인 연금 기여율 (%)", sPen:"연금 공제액 YTD ($)", sGross:"총급여 YTD ($, 선택)", sPS:"이익배분금 YTD ($, 선택)",
-      sApply:"이 금액을 최근 연봉에 넣기",
+      sApply:"이 금액을 최근 연봉에 넣기", phPen:"예) 2,500.00", phGross:"예) 50,000.00", phPS:"예) 1,000.00",
       oLoad:"글자 인식 준비 중… (처음 한 번은 몇 초 걸립니다)", oRead:(i,n,p)=>`${n}장 중 ${i}번째 읽는 중… ${p}%`,
       oDone:f=>`읽기 완료: ${f.join(", ") || "찾은 항목 없음. 숫자를 직접 입력해 주세요."}`, oFail:"이 폰에서 글자 인식을 실행하지 못했습니다. 숫자를 직접 입력해 주세요.",
       fPen:"연금 공제액", fGross:"총급여", fPS:"이익배분금",
@@ -324,9 +324,9 @@ details .grid2{margin-top:12px}
       andSteps:"<li>Open this app's link in <b>Chrome</b>.</li><li>Tap the <b>three-dot menu (⋮)</b> at the top right.</li><li>Tap <b>\"Add to Home screen\"</b> or <b>\"Install app\"</b>.</li><li>Tap <b>\"Add\"</b>. The icon appears on your home screen.</li>",
       privBody:"<b>The numbers you enter and the pay stub images you upload are never sent to a server.</b> Pay stub text is read on this phone. Your inputs are kept only in this phone's browser storage, and no one else or any other device can see them.<br><br>When the app opens, it only downloads <b>app files</b>: the page, fonts and the text-reading program. No sign-in or account is needed.<br><br>Note: clearing your browser's history or site data also clears saved inputs. On iPhone, the home screen icon and Safari keep separate storage, so values entered in one may not show in the other.",
       stubSum:"Fill in pay from pay stub screenshots", stubPick:"Choose pay stub screens (several OK)",
-      stubHelp:"Upload the <b>Deductions (YTD)</b> screen from your pay app. It has your pension deduction. Add the <b>Gross Earnings (YTD)</b> screen too and the app will cross-check the amounts. Images are read only on this phone and never sent anywhere. You can correct any number below.",
+      stubHelp:"Upload the <b>Deductions (YTD)</b> screen from your pay app. It has your pension deduction. Add the <b>Gross Earnings (YTD)</b> screen too and the app will cross-check the amounts. Images are read only on this phone and never sent anywhere, and the amounts aren't saved. You can correct any number below.",
       sAsOf:"Year-to-date as of (last pay date)", sRate:"Your pension contribution rate (%)", sPen:"Pension deduction YTD ($)", sGross:"Gross earnings YTD ($, optional)", sPS:"Profit sharing YTD ($, optional)",
-      sApply:"Use this as my recent annual pay",
+      sApply:"Use this as my recent annual pay", phPen:"e.g. 2,500.00", phGross:"e.g. 50,000.00", phPS:"e.g. 1,000.00",
       oLoad:"Getting text reader ready… (a few seconds the first time)", oRead:(i,n,p)=>`Reading image ${i} of ${n}… ${p}%`,
       oDone:f=>`Done. Found: ${f.join(", ") || "nothing. Please type the numbers in."}`, oFail:"Text reading couldn't run on this phone. Please type the numbers in.",
       fPen:"pension deduction", fGross:"gross earnings", fPS:"profit sharing",
@@ -382,6 +382,7 @@ details .grid2{margin-top:12px}
     document.documentElement.lang = lang;
     document.title = T("title");
     document.querySelectorAll("[data-i]").forEach(el => { el.innerHTML = T(el.dataset.i); });
+    document.querySelectorAll("[data-ph]").forEach(el => { el.placeholder = T(el.dataset.ph); });
     $("langKO").setAttribute("aria-pressed", lang === "ko");
     $("langEN").setAttribute("aria-pressed", lang === "en");
   }
@@ -541,12 +542,12 @@ details .grid2{margin-top:12px}
   /* ---------- Pay stub reader (on-device OCR) ---------- */
   const STUB_IDS = ["sAsOf","sRate","sPen","sGross","sPS"];
   const STUB_KEY = "ac-pension-stub-v1";
-  try { const s = JSON.parse(localStorage.getItem(STUB_KEY) || "null"); if (s) STUB_IDS.forEach(k => { if (s[k] !== undefined) $(k).value = s[k]; }); } catch (e) {}
+  // Pay stub figures are never saved: they stay only until the page is closed. Remove anything an older version saved.
+  try { localStorage.removeItem(STUB_KEY); } catch (e) {}
   if (!$("sAsOf").value) { const n = new Date(); $("sAsOf").value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
   let stubAnnual = 0, ocrMsg = null;
 
   function stubCalc(){
-    try { const o = {}; STUB_IDS.forEach(k => o[k] = $(k).value); localStorage.setItem(STUB_KEY, JSON.stringify(o)); } catch (e) {}
     const asOf = parseD($("sAsOf").value);
     const pen = num("sPen"), rate = num("sRate")/100, gross = num("sGross"), ps = num("sPS");
     const rows = []; stubAnnual = 0; let check = "", cls = "hint";
@@ -656,7 +657,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.0";
+  const APP_VERSION = "1.6.1";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

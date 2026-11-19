@@ -159,7 +159,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.16</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.17</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -273,12 +273,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.16</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.17</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.16</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.17</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -401,6 +401,7 @@ details .grid2{margin-top:12px}
   const YMD = {birth:[1935,0], hire:[1965,0], sAsOf:[-1,0], retDate:[0,45]};
   const ymdNative = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, "value");
   const p2 = n => String(n).padStart(2, "0");
+  const MON = ["JAN","FEB","MAR","APR","MAY","JUN","JUL","AUG","SEP","OCT","NOV","DEC"];
   const ymdBoxes = [];
   Object.keys(YMD).forEach(id => {
     const inp = $(id), opt = id === "retDate", cy = new Date().getFullYear();
@@ -418,7 +419,7 @@ details .grid2{margin-top:12px}
       const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(v || "");
       const Y = m ? +m[1] : "", M = m ? +m[2] : "", D = m ? +m[3] : "";
       opts(sy, Math.min(y0, Y || y0), Math.max(y1, Y || y1), String(Y), v => v);
-      opts(sm, 1, 12, String(M), p2);
+      opts(sm, 1, 12, String(M), v => MON[v-1]);
       opts(sd, 1, Y && M ? dim(Y, M) : 31, String(D), p2);
     }
     function pick(){
@@ -777,7 +778,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.16";
+  const APP_VERSION = "1.6.17";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

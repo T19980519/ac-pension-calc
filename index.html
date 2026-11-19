@@ -105,6 +105,16 @@ details .grid2{margin-top:12px}
 .upload{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:10px;padding:12px;font-weight:500;cursor:pointer;text-align:center}
 .upload input{position:absolute;width:1px;height:1px;opacity:0}
 .upload:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.scan{position:relative;height:170px;border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--line)}
+.scan[hidden]{display:none}
+.scan img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;filter:grayscale(.3) brightness(.92)}
+.scan .sline{position:absolute;left:0;right:0;top:0;height:42px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--accent) 35%,transparent) 80%,var(--accent));border-bottom:2px solid var(--accent);box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 55%,transparent);animation:scanmove 1.6s ease-in-out infinite alternate}
+@keyframes scanmove{from{transform:translateY(-42px)}to{transform:translateY(170px)}}
+.scan .sbar{position:absolute;left:10px;right:10px;bottom:10px;height:6px;border-radius:3px;background:rgba(0,0,0,.35);overflow:hidden}
+.scan .sbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
+.scan .sdone{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;color:#fff;background:color-mix(in srgb,var(--good) 70%,transparent);opacity:0;transition:opacity .25s}
+.scan.done .sdone{opacity:1} .scan.done .sline{display:none}
+@media (prefers-reduced-motion:reduce){.scan .sline{animation:none;transform:translateY(64px)}}
 .apply{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
 .apply:disabled{opacity:.45;cursor:default}
 .apply:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -133,7 +143,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.6</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.7</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -182,6 +192,7 @@ details .grid2{margin-top:12px}
       <div class="stub-in">
         <p class="hint" data-i="stubHelp"></p>
         <label class="upload" for="stubFiles"><span data-i="stubPick">명세서 화면 선택</span><input id="stubFiles" type="file" accept="image/*" multiple></label>
+        <div class="scan" id="scanBox" hidden aria-hidden="true"><img id="scanImg" alt=""><div class="sline"></div><div class="sbar"><i id="scanBar"></i></div><div class="sdone">✓</div></div>
         <div class="hint" id="ocrStatus" aria-live="polite"></div>
         <div class="grid2">
           <div class="field"><label for="sAsOf" data-i="sAsOf">명세서 누적 기준일</label><input id="sAsOf" type="date"></div>
@@ -247,12 +258,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.6</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.7</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.6</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.7</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -623,7 +634,7 @@ details .grid2{margin-top:12px}
     workerP = fetch(base + "lang/eng-traineddata-gz.wasm").then(r => { if (!r.ok) throw new Error("model " + r.status); return r.arrayBuffer(); })
       .then(buf => Tesseract.createWorker([{ code: "eng", data: new Uint8Array(buf) }], 1, {
       workerPath: base + "worker.min.js", corePath: base + "core/", cacheMethod: "none",
-      logger: m => { if (m.status === "recognizing text" && curJob) { curJob.p = Math.round(m.progress*100); ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr(); } }
+      logger: m => { if (m.status === "recognizing text" && curJob) { curJob.p = Math.round(m.progress*100); ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr(); scanProg(); } }
     }));
     return workerP;
   }
@@ -641,15 +652,35 @@ details .grid2{margin-top:12px}
       return c;
     } finally { URL.revokeObjectURL(url); }
   }
+  /* scanning animation over the image being read (image stays on the phone) */
+  let scanUrl = null, scanTimer = null;
+  function scanShow(file){
+    clearTimeout(scanTimer);
+    const box = $("scanBox"), img = $("scanImg");
+    if (scanUrl) URL.revokeObjectURL(scanUrl);
+    scanUrl = URL.createObjectURL(file); img.src = scanUrl;
+    box.classList.remove("done"); box.hidden = false;
+  }
+  function scanProg(){
+    if (!curJob) return;
+    $("scanBar").style.width = Math.min(100, ((curJob.i - 1) + curJob.p / 100) / curJob.n * 100) + "%";
+  }
+  function scanEnd(ok){
+    const box = $("scanBox");
+    if (ok) { $("scanBar").style.width = "100%"; box.classList.add("done"); }
+    scanTimer = setTimeout(() => { box.hidden = true; box.classList.remove("done"); $("scanImg").removeAttribute("src"); if (scanUrl) { URL.revokeObjectURL(scanUrl); scanUrl = null; } }, ok ? 1200 : 0);
+  }
   $("stubFiles").addEventListener("change", async e => {
     const files = [...e.target.files]; if (!files.length) return;
     ocrMsg = () => T("oLoad"); showOcr();
+    scanShow(files[0]); $("scanBar").style.width = "0%";
     try {
       if (typeof Tesseract === "undefined") throw new Error("no lib");
       const w = await getWorker();
       const found = {};
       for (let i = 0; i < files.length; i++) {
         curJob = {i: i+1, n: files.length, p: 0}; ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr();
+        if (i > 0) scanShow(files[i]); scanProg();
         const { data } = await w.recognize(await prep(files[i]));
         parseStub(data.text, found);
         if ((/deduction|pension/i.test(data.text) && found.pen == null) || (/gross/i.test(data.text) && found.ps == null)) { // second try on the original colours
@@ -662,9 +693,9 @@ details .grid2{margin-top:12px}
       if (found.pen != null) { $("sPen").value = found.pen.toFixed(2); names.push(`${T("fPen")} ${money(found.pen)}`); }
       if (found.gross != null) { $("sGross").value = found.gross.toFixed(2); names.push(`${T("fGross")} ${money(found.gross)}`); }
       if (found.ps != null) { $("sPS").value = found.ps.toFixed(2); names.push(`${T("fPS")} ${money(found.ps)}`); }
-      ocrMsg = () => T("oDone")(names); showOcr(); stubCalc();
+      ocrMsg = () => T("oDone")(names); showOcr(); stubCalc(); scanEnd(true);
     } catch (err) {
-      console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr();
+      console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr(); scanEnd(false);
     }
     e.target.value = "";
   });
@@ -675,7 +706,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.6";
+  const APP_VERSION = "1.6.7";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

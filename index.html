@@ -203,7 +203,7 @@ details .grid2{margin-top:12px}
       <div class="hint" id="planHint"></div>
     </div>
     <div class="grid2">
-      <div class="field"><label for="salary" data-i="salary">최근 연봉 (CAD, 오버타임 포함)</label><input id="salary" type="number" inputmode="decimal" step="500" value="75000"></div>
+      <div class="field"><label for="salary" data-i="salary">최근 연봉 (CAD, 오버타임 포함)</label><input id="salary" type="number" inputmode="decimal" step="500" data-ph="phSal" placeholder="예) 75,000"></div>
       <div class="field"><label for="raise" data-i="raise">매년 인상률 (%)</label><input id="raise" type="number" inputmode="decimal" step="0.1" value="2.5"></div>
     </div>
     <details class="stub" id="stubBox">
@@ -276,12 +276,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.25</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.26</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.25</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.26</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -328,7 +328,7 @@ details .grid2{margin-top:12px}
       sApplied:"최근 연봉에 넣었습니다.", sAppliedTo:m=>`적용 완료! 최근 연봉 칸에 <b>${m}</b>을 넣었습니다. 아래 결과도 새로 계산됐습니다.`, days:d=>`${d}일`,
       disc:"개인이 만든 참고용 추정 계산기이며, 회사나 노조의 공식 도구가 아닙니다. 실제 연금액은 회사 연금 포털(Alight)에서 확인하세요.",
       // dynamic
-      need:"생년월일과 입사일을 입력해 주세요.", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
+      need:"생년월일과 입사일을 입력해 주세요.", needSal:"<b>최근 연봉</b>을 넣거나, 아래 급여 명세서 이미지를 올리면 예상 연금이 여기에 나옵니다.", phSal:"예) 75,000", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
       kd80:"80점 도달", kd60:"60세", kd65:"65세", past:"지남",
       c80:"80점 은퇴", c6025:"60세 + 25년", c25:"25년 근속 (60세 이후)", c60:"60세 은퇴", c65:"65세 은퇴", cAge:a=>`${a}세 은퇴`, nowSfx:" (지금 은퇴 시)",
       yrs:(y,m)=>`${y}년 ${m}개월`, age:(y,m)=>m?`${y}세 ${m}개월`:`${y}세`,
@@ -379,7 +379,7 @@ details .grid2{margin-top:12px}
       updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…",
       sApplied:"Added to recent annual pay.", sAppliedTo:m=>`Done! <b>${m}</b> is now your recent annual pay, and the results below are updated.`, days:d=>`${d} days`,
       disc:"This is a personal, unofficial estimator, not a company or union tool. Check your actual pension on the company pension portal (Alight).",
-      need:"Enter your date of birth and hire date.", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
+      need:"Enter your date of birth and hire date.", needSal:"Enter your <b>recent annual pay</b>, or upload pay stub screenshots below, to see your estimated pension here.", phSal:"e.g. 75,000", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
       kd80:"80 points", kd60:"Age 60", kd65:"Age 65", past:"passed",
       c80:"Retire at 80 points", c6025:"Age 60 + 25 years", c25:"25 years of service (after 60)", c60:"Retire at 60", c65:"Retire at 65", cAge:a=>`Retire at ${a}`, nowSfx:" (if you retire now)",
       yrs:(y,m)=>`${y} yr ${m} mo`, age:(y,m)=>m?`age ${y} yr ${m} mo`:`age ${y}`,
@@ -593,6 +593,7 @@ details .grid2{margin-top:12px}
   function run(){
     const birth = parseD($("birth").value), hire = parseD($("hire").value);
     if (!birth || !hire) { $("cards").innerHTML = `<div class="panel"><p class="note">${T("need")}</p></div>`; return; }
+    if (!(num("salary") > 0)) { $("cards").innerHTML = `<div class="panel"><p class="note">${T("needSal")}</p></div>`; return; }
     if (!planTouched && hireSet) setPlan(hire.getTime() < SPLIT ? "DB" : "MEPP", false);
     $("planHint").textContent = !hireSet ? "" : (hire.getTime() < SPLIT) === (plan === "DB") ? T("planOk") : T("planDiff");
     const now = new Date(); const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
@@ -781,7 +782,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.25";
+  const APP_VERSION = "1.6.26";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

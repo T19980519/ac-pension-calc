@@ -105,16 +105,29 @@ details .grid2{margin-top:12px}
 .upload{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:10px;padding:12px;font-weight:500;cursor:pointer;text-align:center}
 .upload input{position:absolute;width:1px;height:1px;opacity:0}
 .upload:focus-within{outline:2px solid var(--accent);outline-offset:1px}
-.scan{position:relative;height:170px;border-radius:12px;overflow:hidden;background:var(--bg);border:1px solid var(--line)}
-.scan[hidden]{display:none}
-.scan img{width:100%;height:100%;object-fit:cover;object-position:top;display:block;filter:grayscale(.3) brightness(.92)}
-.scan .sline{position:absolute;left:0;right:0;top:0;height:42px;background:linear-gradient(to bottom,transparent,color-mix(in srgb,var(--accent) 35%,transparent) 80%,var(--accent));border-bottom:2px solid var(--accent);box-shadow:0 6px 16px color-mix(in srgb,var(--accent) 55%,transparent);animation:scanmove 1.6s ease-in-out infinite alternate}
-@keyframes scanmove{from{transform:translateY(-42px)}to{transform:translateY(170px)}}
-.scan .sbar{position:absolute;left:10px;right:10px;bottom:10px;height:6px;border-radius:3px;background:rgba(0,0,0,.35);overflow:hidden}
-.scan .sbar i{display:block;height:100%;width:0;background:var(--accent);transition:width .3s}
-.scan .sdone{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:44px;color:#fff;background:color-mix(in srgb,var(--good) 70%,transparent);opacity:0;transition:opacity .25s}
-.scan.done .sdone{opacity:1} .scan.done .sline{display:none}
-@media (prefers-reduced-motion:reduce){.scan .sline{animation:none;transform:translateY(64px)}}
+/* working panel (same look and motion as the realtor app's "AI draft" screen) */
+.working{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--surface),var(--soft));box-shadow:0 14px 30px -22px color-mix(in srgb,var(--accent) 80%,transparent)}
+.working[hidden]{display:none}
+.working:not([hidden]) + #ocrStatus{display:none}
+.working-head{display:flex;gap:12px;align-items:center}
+.working-head b{font-size:15px}
+.spinner{flex:none;width:32px;height:32px;border-radius:50%;background:conic-gradient(from 0deg,transparent 0deg,color-mix(in srgb,var(--accent) 70%,#000) 120deg,color-mix(in srgb,var(--accent) 35%,#fff) 240deg,var(--accent) 360deg);-webkit-mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));mask:radial-gradient(farthest-side,transparent calc(100% - 4px),#000 calc(100% - 3px));animation:spin .9s linear infinite}
+@keyframes spin{to{transform:rotate(360deg)}}
+.working-bar{height:6px;border-radius:999px;background:color-mix(in srgb,var(--accent) 15%,var(--bg));overflow:hidden;position:relative}
+.working-bar>div{position:absolute;top:0;bottom:0;left:0;width:38%;border-radius:999px;background:var(--accent);animation:slide 1.6s ease-in-out infinite}
+@keyframes slide{0%{left:-38%}100%{left:100%}}
+.working-steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:8px}
+.working-steps li{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:14px}
+.working-steps .mark{flex:none;width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line);display:inline-flex;align-items:center;justify-content:center;font-size:11px;font-weight:700}
+.working-steps li.done{color:var(--ink)}
+.working-steps li.done .mark{background:var(--accent);border-color:transparent;color:var(--accent-ink)}
+.working-steps li.now{color:var(--ink);font-weight:700}
+.working-steps li.now .mark{border-color:var(--accent);background:radial-gradient(circle,var(--accent) 0 4px,transparent 5px);animation:pulse 1.2s ease-in-out infinite}
+@keyframes pulse{50%{box-shadow:0 0 0 5px color-mix(in srgb,var(--accent) 25%,transparent)}}
+.working.fin .spinner{animation:none;background:var(--good);-webkit-mask:none;mask:none;position:relative}
+.working.fin .spinner::after{content:"✓";position:absolute;inset:0;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+.working.fin .working-bar>div{animation:none;left:0;width:100%;background:var(--good)}
+@media (prefers-reduced-motion:reduce){.spinner{animation-duration:3s}.working-bar>div{animation:none;left:0;width:100%;opacity:.5}.working-steps li.now .mark{animation:none}}
 .apply{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
 .apply:disabled{opacity:.45;cursor:default}
 .apply:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
@@ -143,7 +156,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.7</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.8</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -192,7 +205,7 @@ details .grid2{margin-top:12px}
       <div class="stub-in">
         <p class="hint" data-i="stubHelp"></p>
         <label class="upload" for="stubFiles"><span data-i="stubPick">명세서 화면 선택</span><input id="stubFiles" type="file" accept="image/*" multiple></label>
-        <div class="scan" id="scanBox" hidden aria-hidden="true"><img id="scanImg" alt=""><div class="sline"></div><div class="sbar"><i id="scanBar"></i></div><div class="sdone">✓</div></div>
+        <div class="working" id="work" hidden><div class="working-head"><span class="spinner" aria-hidden="true"></span><div><b id="wTitle"></b><div class="hint" id="wSub"></div></div></div><div class="working-bar" aria-hidden="true"><div></div></div><ol class="working-steps" id="wSteps"></ol></div>
         <div class="hint" id="ocrStatus" aria-live="polite"></div>
         <div class="grid2">
           <div class="field"><label for="sAsOf" data-i="sAsOf">명세서 누적 기준일</label><input id="sAsOf" type="date"></div>
@@ -258,12 +271,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.7</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.8</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.7</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.8</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -297,6 +310,8 @@ details .grid2{margin-top:12px}
       stubHelp:"급여 앱의 <b>Deductions (YTD)</b> 화면은 꼭 올려 주세요. 연금 공제액이 있습니다. <b>Gross Earnings (YTD)</b> 화면도 올리면 금액을 서로 맞춰 봅니다. 이미지는 이 폰 안에서만 읽고 어디에도 보내지 않으며, 읽은 금액도 저장하지 않습니다. 읽은 숫자는 아래에서 직접 고칠 수 있습니다.",
       sAsOf:"명세서 누적 기준일 (마지막 급여일)", sRate:"본인 연금 기여율 (%)", sPen:"연금 공제액 YTD ($)", sGross:"총급여 YTD ($, 선택)", sPS:"이익배분금 YTD ($, 선택)",
       sApply:"이 금액을 최근 연봉에 넣기", phPen:"예) 2,500.00", phGross:"예) 50,000.00", phPS:"예) 1,000.00",
+      wTitle:"명세서를 읽는 중입니다", wDone:"다 읽었습니다", wSub:t=>`경과 ${t} · 보통 10~30초 걸려요. 화면을 닫지 말고 기다려 주세요.`,
+      wSteps:["글자 인식 준비하는 중", (i,n,p)=>`명세서 읽는 중${n>1?` (${i}/${n})`:""}${p!=null?` ${p}%`:""}`, "연금 공제액·총급여 찾는 중", "연봉으로 환산하는 중"],
       oLoad:"글자 인식 준비 중… (처음 한 번은 몇 초 걸립니다)", oRead:(i,n,p)=>`${n}장 중 ${i}번째 읽는 중… ${p}%`,
       oDone:f=>`읽기 완료: ${f.join(", ") || "찾은 항목 없음. 숫자를 직접 입력해 주세요."}`, oFail:"이 폰에서 글자 인식을 실행하지 못했습니다. 숫자를 직접 입력해 주세요.",
       fPen:"연금 공제액", fGross:"총급여", fPS:"이익배분금",
@@ -347,6 +362,8 @@ details .grid2{margin-top:12px}
       stubHelp:"Upload the <b>Deductions (YTD)</b> screen from your pay app. It has your pension deduction. Add the <b>Gross Earnings (YTD)</b> screen too and the app will cross-check the amounts. Images are read only on this phone and never sent anywhere, and the amounts aren't saved. You can correct any number below.",
       sAsOf:"Year-to-date as of (last pay date)", sRate:"Your pension contribution rate (%)", sPen:"Pension deduction YTD ($)", sGross:"Gross earnings YTD ($, optional)", sPS:"Profit sharing YTD ($, optional)",
       sApply:"Use this as my recent annual pay", phPen:"e.g. 2,500.00", phGross:"e.g. 50,000.00", phPS:"e.g. 1,000.00",
+      wTitle:"Reading your pay stub", wDone:"All read", wSub:t=>`Elapsed ${t} · Usually 10–30 seconds. Please keep this screen open.`,
+      wSteps:["Getting the text reader ready", (i,n,p)=>`Reading the pay stub${n>1?` (${i}/${n})`:""}${p!=null?` ${p}%`:""}`, "Finding the pension deduction and gross pay", "Converting to yearly pay"],
       oLoad:"Getting text reader ready… (a few seconds the first time)", oRead:(i,n,p)=>`Reading image ${i} of ${n}… ${p}%`,
       oDone:f=>`Done. Found: ${f.join(", ") || "nothing. Please type the numbers in."}`, oFail:"Text reading couldn't run on this phone. Please type the numbers in.",
       fPen:"pension deduction", fGross:"gross earnings", fPS:"profit sharing",
@@ -634,7 +651,7 @@ details .grid2{margin-top:12px}
     workerP = fetch(base + "lang/eng-traineddata-gz.wasm").then(r => { if (!r.ok) throw new Error("model " + r.status); return r.arrayBuffer(); })
       .then(buf => Tesseract.createWorker([{ code: "eng", data: new Uint8Array(buf) }], 1, {
       workerPath: base + "worker.min.js", corePath: base + "core/", cacheMethod: "none",
-      logger: m => { if (m.status === "recognizing text" && curJob) { curJob.p = Math.round(m.progress*100); ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr(); scanProg(); } }
+      logger: m => { if (m.status === "recognizing text" && curJob) { curJob.p = Math.round(m.progress*100); ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr(); if (wp) { wp.p = curJob.p; wpRender(); } } }
     }));
     return workerP;
   }
@@ -652,35 +669,42 @@ details .grid2{margin-top:12px}
       return c;
     } finally { URL.revokeObjectURL(url); }
   }
-  /* scanning animation over the image being read (image stays on the phone) */
-  let scanUrl = null, scanTimer = null;
-  function scanShow(file){
-    clearTimeout(scanTimer);
-    const box = $("scanBox"), img = $("scanImg");
-    if (scanUrl) URL.revokeObjectURL(scanUrl);
-    scanUrl = URL.createObjectURL(file); img.src = scanUrl;
-    box.classList.remove("done"); box.hidden = false;
+  /* working panel while pay stubs are read (same look as the realtor app's AI draft screen) */
+  let wp = null, wpTick = null, wpHide = null;
+  function wpStart(n){
+    clearTimeout(wpHide); clearInterval(wpTick);
+    wp = {t0: Date.now(), step: 0, i: 1, n, p: 0, done: false};
+    $("work").hidden = false; wpRender(); wpTick = setInterval(wpRender, 500);
   }
-  function scanProg(){
-    if (!curJob) return;
-    $("scanBar").style.width = Math.min(100, ((curJob.i - 1) + curJob.p / 100) / curJob.n * 100) + "%";
+  function wpStep(k){ if (wp) { wp.step = k; wpRender(); } }
+  function wpRender(){
+    if (!wp) return;
+    const sec = Math.floor((Date.now() - wp.t0) / 1000);
+    $("wTitle").textContent = wp.done ? T("wDone") : T("wTitle");
+    $("wSub").textContent = T("wSub")(Math.floor(sec / 60) + ":" + String(sec % 60).padStart(2, "0"));
+    $("wSteps").innerHTML = T("wSteps").map((l, k) => {
+      const cls = wp.done || k < wp.step ? "done" : k === wp.step ? "now" : "";
+      const lab = typeof l === "function" ? l(wp.i, wp.n, k === wp.step ? wp.p : null) : l;
+      return `<li class="${cls}"><span class="mark" aria-hidden="true">${cls === "done" ? "✓" : ""}</span>${lab}</li>`;
+    }).join("");
+    $("work").classList.toggle("fin", wp.done);
   }
-  function scanEnd(ok){
-    const box = $("scanBox");
-    if (ok) { $("scanBar").style.width = "100%"; box.classList.add("done"); }
-    scanTimer = setTimeout(() => { box.hidden = true; box.classList.remove("done"); $("scanImg").removeAttribute("src"); if (scanUrl) { URL.revokeObjectURL(scanUrl); scanUrl = null; } }, ok ? 1200 : 0);
+  function wpEnd(ok){
+    clearInterval(wpTick);
+    if (ok && wp) { wp.done = true; wpRender(); }
+    wpHide = setTimeout(() => { $("work").hidden = true; $("work").classList.remove("fin"); wp = null; }, ok ? 1500 : 0);
   }
   $("stubFiles").addEventListener("change", async e => {
     const files = [...e.target.files]; if (!files.length) return;
     ocrMsg = () => T("oLoad"); showOcr();
-    scanShow(files[0]); $("scanBar").style.width = "0%";
+    wpStart(files.length);
     try {
       if (typeof Tesseract === "undefined") throw new Error("no lib");
       const w = await getWorker();
       const found = {};
       for (let i = 0; i < files.length; i++) {
         curJob = {i: i+1, n: files.length, p: 0}; ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr();
-        if (i > 0) scanShow(files[i]); scanProg();
+        if (wp) { wp.i = i+1; wp.p = 0; } wpStep(1);
         const { data } = await w.recognize(await prep(files[i]));
         parseStub(data.text, found);
         if ((/deduction|pension/i.test(data.text) && found.pen == null) || (/gross/i.test(data.text) && found.ps == null)) { // second try on the original colours
@@ -688,25 +712,25 @@ details .grid2{margin-top:12px}
           for (const k in f2) if (found[k] == null) found[k] = f2[k];
         }
       }
-      curJob = null;
-      const names = [];
-      if (found.pen != null) { $("sPen").value = found.pen.toFixed(2); names.push(`${T("fPen")} ${money(found.pen)}`); }
-      if (found.gross != null) { $("sGross").value = found.gross.toFixed(2); names.push(`${T("fGross")} ${money(found.gross)}`); }
-      if (found.ps != null) { $("sPS").value = found.ps.toFixed(2); names.push(`${T("fPS")} ${money(found.ps)}`); }
-      ocrMsg = () => T("oDone")(names); showOcr(); stubCalc(); scanEnd(true);
+      curJob = null; wpStep(2);
+      if (found.pen != null) $("sPen").value = found.pen.toFixed(2);
+      if (found.gross != null) $("sGross").value = found.gross.toFixed(2);
+      if (found.ps != null) $("sPS").value = found.ps.toFixed(2);
+      const names = () => [["pen","fPen"],["gross","fGross"],["ps","fPS"]].filter(([k]) => found[k] != null).map(([k,l]) => `${T(l)} ${money(found[k])}`);
+      wpStep(3); ocrMsg = () => T("oDone")(names()); showOcr(); stubCalc(); wpEnd(true);
     } catch (err) {
-      console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr(); scanEnd(false);
+      console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr(); wpEnd(false);
     }
     e.target.value = "";
   });
-  $("langKO").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); });
-  $("langEN").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); });
+  $("langKO").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); wpRender(); });
+  $("langEN").addEventListener("click", () => { showOcr(); stubCalc(); showApplied(); wpRender(); });
   $("planDB").addEventListener("click", stubCalc);
   $("planMEPP").addEventListener("click", stubCalc);
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.7";
+  const APP_VERSION = "1.6.8";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

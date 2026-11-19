@@ -98,6 +98,8 @@ details .grid2{margin-top:12px}
 .tline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-width:0}
 .ver{display:inline-block;font-family:var(--f-display);font-size:12px;font-weight:600;padding:1px 7px;border:1px solid var(--line);border-radius:99px;color:var(--muted);letter-spacing:.04em;text-transform:none}
 .titlerow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.langbox{display:flex;flex-direction:column;align-items:center;gap:2px;flex-shrink:0}
+.langlab{font-family:var(--f-display);font-size:11px;font-weight:600;letter-spacing:.08em;color:var(--muted)}
 .lang{display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:99px;padding:3px;background:var(--surface);flex-shrink:0}
 .lang button{font:inherit;font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.06em;border:0;border-radius:99px;padding:6px 11px;background:transparent;color:var(--muted);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
@@ -160,11 +162,11 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.19</span></div>
-      <div class="lang" role="group" aria-label="Language">
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.20</span></div>
+      <div class="langbox"><span class="langlab" aria-hidden="true">Language</span><div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
-      </div>
+      </div></div>
     </div>
     <p data-i="sub">회사 연금 + CPP + OAS 예상액. 금액은 모두 <b>오늘 돈 가치(세전, 월)</b>로 보여줍니다.</p>
   </header>
@@ -274,12 +276,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.19</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.20</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.19</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.20</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -779,7 +781,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.19";
+  const APP_VERSION = "1.6.20";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

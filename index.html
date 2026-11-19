@@ -125,7 +125,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.5.1</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.0</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -198,7 +198,11 @@ details .grid2{margin-top:12px}
       <div class="field"><label for="oasStart" data-i="oasStart">OAS 받기 시작 나이</label>
         <select id="oasStart"><option selected>65</option><option>66</option><option>67</option><option>68</option><option>69</option><option>70</option></select></div>
     </div>
-    <div class="field"><label for="custom" data-i="custom">비교해 볼 다른 은퇴 나이</label><input id="custom" type="number" inputmode="decimal" step="0.5" min="50" max="71" value="62"></div>
+    <div class="grid2">
+      <div class="field"><label for="retDate" data-i="retDate">원하는 은퇴 날짜</label><input id="retDate" type="date"></div>
+      <div class="field"><label for="custom" data-i="custom">비교해 볼 다른 은퇴 나이</label><input id="custom" type="number" inputmode="decimal" step="0.5" min="50" max="71" value="62"></div>
+    </div>
+    <div class="hint" data-i="retHint">원하는 날짜를 고르면 그날 은퇴했을 때의 결과가 맨 위에 나옵니다.</div>
 
     <details>
       <summary data-i="adv">고급 설정 (확인 안 된 값 포함)</summary>
@@ -234,7 +238,7 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.5.1</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.0</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
@@ -246,7 +250,7 @@ details .grid2{margin-top:12px}
 (function(){
   const YEAR = 365.2425*864e5;
   const $ = id => document.getElementById(id);
-  const ids = ["birth","hire","salary","raise","cpp65","cppStart","resid","oasStart","custom","ympe","ympeG","cap","maxPer","ded","infl","idx","meppRate","meppC","meppNow","oasMax"];
+  const ids = ["birth","hire","salary","raise","cpp65","cppStart","resid","oasStart","custom","retDate","ympe","ympeG","cap","maxPer","ded","infl","idx","meppRate","meppC","meppNow","oasMax"];
   const KEY = "ac-pension-calc-v1";
   let plan = "DB", planTouched = false, lang = "ko";
 
@@ -259,7 +263,7 @@ details .grid2{margin-top:12px}
       plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2016-01-22 이전 입사", planMEPPs:"2016-01-22 이후 입사",
       salary:"최근 연봉 (CAD, 오버타임 포함)", raise:"매년 인상률 (%)", cpp65:"65세 CPP 월 예상액 ($)", cppStart:"CPP 받기 시작 나이",
       cppHint:"CPP 예상액은 My Service Canada Account의 \"65세 예상액\"을 넣는 게 가장 정확합니다. 2026년 최대는 월 $1,507.65입니다.",
-      resid:"18세 이후 캐나다 거주 (년, 65세 기준)", oasStart:"OAS 받기 시작 나이", custom:"비교해 볼 다른 은퇴 나이",
+      resid:"18세 이후 캐나다 거주 (년, 65세 기준)", oasStart:"OAS 받기 시작 나이", custom:"비교해 볼 다른 은퇴 나이", retDate:"원하는 은퇴 날짜", retHint:"원하는 날짜를 고르면 그날 은퇴했을 때의 결과가 맨 위에 나옵니다.", cDate:"원하는 날짜 은퇴",
       adv:"고급 설정 (확인 안 된 값 포함)", ympeG:"YMPE 연 증가율 (%)", cap:"2030년 이후 소득 상한 ($)", maxPer:"근속 1년당 최대 연금 ($)",
       ded:"근속 차감 (개월, 무급휴직 등)", infl:"물가상승률 (%)", idx:"은퇴 후 회사연금 물가연동 (%/년) ⚠️",
       meppRate:"MEPP 적립률 (기여금 $1당 연금 %) ⚠️", meppC:"MEPP 총 기여율 (연봉 대비 %) ⚠️", meppNow:"MEPP 현재까지 적립 연금 ($/년)", oasMax:"OAS 최대 월액 ($)",
@@ -309,7 +313,7 @@ details .grid2{margin-top:12px}
       plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2016-01-22", planMEPPs:"Hired on/after 2016-01-22",
       salary:"Recent annual pay (CAD, incl. overtime)", raise:"Yearly raise (%)", cpp65:"CPP at 65, monthly estimate ($)", cppStart:"CPP start age",
       cppHint:"For the most accurate CPP figure, use the \"estimate at 65\" in your My Service Canada Account. The 2026 maximum is $1,507.65 a month.",
-      resid:"Years in Canada after age 18 (by 65)", oasStart:"OAS start age", custom:"Another retirement age to compare",
+      resid:"Years in Canada after age 18 (by 65)", oasStart:"OAS start age", custom:"Another retirement age to compare", retDate:"My retirement date", retHint:"Pick a date to see results for retiring that day, shown first.", cDate:"Retire on my date",
       adv:"Advanced settings (includes unconfirmed values)", ympeG:"YMPE yearly growth (%)", cap:"Earnings cap from 2030 ($)", maxPer:"Max pension per year of service ($)",
       ded:"Service to deduct (months, e.g. unpaid leave)", infl:"Inflation (%)", idx:"Pension indexing after retirement (%/yr) ⚠️",
       meppRate:"MEPP accrual (% of each $1 contributed) ⚠️", meppC:"MEPP total contribution (% of pay) ⚠️", meppNow:"MEPP pension accrued so far ($/yr)", oasMax:"OAS maximum monthly ($)",
@@ -519,6 +523,8 @@ details .grid2{margin-top:12px}
     $("keydates").innerHTML = kd.map(([l,d]) => `<div class="kd"><b>${fmtD(d)}</b><span>${l}${d < today ? " · " + T("past") : ""}</span></div>`).join("");
 
     const list = [];
+    const myDate = parseD($("retDate").value);
+    if (myDate) list.push([T("cDate"), myDate]);
     if (plan === "DB") list.push([T("c80"), p80eff]);
     else { const s25 = addY(hire, 25 + I.ded/12); const d = new Date(Math.max(d60.getTime(), s25.getTime())); list.push([d.getTime()===d60.getTime() ? T("c6025") : T("c25"), d]); }
     list.push([T("c60"), d60], [T("c65"), d65]);
@@ -650,7 +656,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.5.1";
+  const APP_VERSION = "1.6.0";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

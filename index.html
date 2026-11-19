@@ -1,0 +1,642 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>나의 연금 계산기</title>
+<meta name="description" content="Air Canada IAM&amp;AW pension + CPP + OAS estimator. All data stays on your phone.">
+<meta name="theme-color" content="#D9480F">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png" type="image/png">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="연금 계산기">
+<style>:root{color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}body{margin:0}img{max-width:100%}[hidden]{display:none!important}</style>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@500;600;700&family=Noto+Sans+KR:wght@400;500;700&display=swap">
+<style>
+/* Layout: one narrow column like a ramp checklist card; inputs on top, scenario "gate cards" below. */
+:root{
+  --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16212E; --muted:#5B6878; --line:#D3DAE2;
+  --accent:#D9480F; --accent-ink:#FFFFFF; --soft:#FFF1E8;
+  --good:#1F7A4D; --good-bg:#E3F4EA; --warn:#9A5B00; --warn-bg:#FFF3D6; --bad:#B42318; --bad-bg:#FDE7E5;
+  --f-display:"Barlow Semi Condensed","Noto Sans KR",system-ui,sans-serif;
+  --f-body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
+  --accent:#FF7A3D; --accent-ink:#1A0D05; --soft:#2A1E17;
+  --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
+  --accent:#FF7A3D; --accent-ink:#1A0D05; --soft:#2A1E17;
+  --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:16px 40px}
+.wrap{max-width:560px;margin:0 auto;display:flex;flex-direction:column;gap:16px}
+header h1{font-family:var(--f-display);font-weight:700;font-size:30px;letter-spacing:.01em;margin:0;line-height:1.1;text-wrap:balance}
+header p{margin:4px 0 0;color:var(--muted);font-size:13px}
+.tag{font-family:var(--f-display);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
+.panel h2{font-family:var(--f-display);font-size:19px;font-weight:600;margin:0}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{display:flex;flex-direction:column;gap:4px;min-width:0}
+.field label{font-size:13px;color:var(--muted);font-weight:500}
+.field input,.field select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+.field input:focus,.field select:focus,.seg button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.hint{font-size:12px;color:var(--muted)}
+.seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
+.seg button{font:inherit;font-size:14px;border:0;border-radius:9px;padding:10px 8px;background:transparent;color:var(--ink);cursor:pointer;line-height:1.3}
+.seg button small{display:block;font-size:11px;color:var(--muted)}
+.seg button[aria-pressed="true"]{background:var(--accent);color:var(--accent-ink)}
+.seg button[aria-pressed="true"] small{color:inherit;opacity:.85}
+details{border-top:1px solid var(--line);padding-top:12px}
+summary{cursor:pointer;font-weight:500;font-size:14px}
+details .grid2{margin-top:12px}
+.keydates{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.kd{background:var(--bg);border-radius:10px;padding:10px;min-width:0}
+.kd b{display:block;font-family:var(--f-display);font-size:18px;font-weight:700;font-variant-numeric:tabular-nums}
+.kd span{font-size:11px;color:var(--muted)}
+.cards{display:flex;flex-direction:column;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.card.best{border-color:var(--accent)}
+.card-hd{display:flex;justify-content:space-between;align-items:baseline;gap:8px;padding:14px 16px 0;flex-wrap:wrap}
+.card-hd h3{margin:0;font-family:var(--f-display);font-size:22px;font-weight:700}
+.card-hd .when{font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.pill{display:inline-block;font-size:12px;font-weight:500;padding:2px 8px;border-radius:99px}
+.pill.good{background:var(--good-bg);color:var(--good)}
+.pill.warn{background:var(--warn-bg);color:var(--warn)}
+.pill.bad{background:var(--bad-bg);color:var(--bad)}
+.card-bd{padding:10px 16px 14px;display:flex;flex-direction:column;gap:10px}
+.meta{display:flex;gap:6px;flex-wrap:wrap;align-items:center;font-size:13px;color:var(--muted)}
+.phases{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.phase{background:var(--bg);border-radius:10px;padding:10px 12px;min-width:0}
+.phase .lbl{font-size:12px;color:var(--muted)}
+.phase .amt{font-family:var(--f-display);font-weight:700;font-size:26px;line-height:1.15;font-variant-numeric:tabular-nums}
+.phase .amt small{font-size:13px;font-weight:500;color:var(--muted)}
+.rows{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}
+.rows td{padding:5px 0;border-bottom:1px solid var(--line);vertical-align:top}
+.rows td:last-child{text-align:right;white-space:nowrap;padding-left:8px}
+.rows tr:last-child td{border-bottom:0}
+.note{font-size:12px;color:var(--muted);line-height:1.6}
+.note b{color:var(--ink)}
+.disclaimer{background:var(--soft);border-radius:12px;padding:12px 14px;font-size:12px;line-height:1.6}
+@media (max-width:380px){.grid2{grid-template-columns:1fr}.keydates{grid-template-columns:1fr 1fr}}
+@media (prefers-reduced-motion:no-preference){.card{transition:border-color .2s}}
+.tline{display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;min-width:0}
+.ver{display:inline-block;font-family:var(--f-display);font-size:12px;font-weight:600;padding:1px 7px;border:1px solid var(--line);border-radius:99px;color:var(--muted);letter-spacing:.04em;text-transform:none}
+.titlerow{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.lang{display:inline-grid;grid-template-columns:1fr 1fr;border:1px solid var(--line);border-radius:99px;padding:3px;background:var(--surface);flex-shrink:0}
+.lang button{font:inherit;font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.06em;border:0;border-radius:99px;padding:6px 11px;background:transparent;color:var(--muted);cursor:pointer}
+.lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
+.lang button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
+.stub{border:1px dashed var(--accent);border-radius:12px;padding:12px 14px;background:var(--soft)}
+.stub summary{color:var(--accent);font-weight:700}
+.stub-in{display:flex;flex-direction:column;gap:12px;margin-top:10px}
+.stub-in .grid2{margin-top:0}
+.upload{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:10px;padding:12px;font-weight:500;cursor:pointer;text-align:center}
+.upload input{position:absolute;width:1px;height:1px;opacity:0}
+.upload:focus-within{outline:2px solid var(--accent);outline-offset:1px}
+.apply{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px;background:var(--accent);color:var(--accent-ink);cursor:pointer}
+.apply:disabled{opacity:.45;cursor:default}
+.apply:focus-visible{outline:2px solid var(--ink);outline-offset:2px}
+.hint.bad{color:var(--bad)} .hint.good{color:var(--good)}
+.info{gap:10px}
+.info details:first-of-type{border-top:0;padding-top:0}
+.steps{margin:10px 0 0;padding-left:20px;display:flex;flex-direction:column;gap:6px;font-size:14px}
+.info .note{margin-top:10px;font-size:13px}
+</style>
+</head>
+<body>
+
+
+<div class="wrap">
+  <header>
+    <div class="tag">Air Canada · IAM&amp;AW</div>
+    <div class="titlerow">
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.4.1</span></div>
+      <div class="lang" role="group" aria-label="Language">
+        <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
+        <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
+      </div>
+    </div>
+    <p data-i="sub">회사 연금 + CPP + OAS 예상액. 금액은 모두 <b>오늘 돈 가치(세전, 월)</b>로 보여줍니다.</p>
+  </header>
+
+  <section class="panel info" aria-labelledby="h-info">
+    <h2 id="h-info" data-i="infoH">폰에 설치하기 · 개인정보</h2>
+    <details>
+      <summary data-i="iosH">아이폰 (Safari)</summary>
+      <ol class="steps" data-i="iosSteps"></ol>
+    </details>
+    <details>
+      <summary data-i="andH">안드로이드 (Chrome)</summary>
+      <ol class="steps" data-i="andSteps"></ol>
+    </details>
+    <details open>
+      <summary data-i="privH">내 데이터는 어디에 저장되나요?</summary>
+      <div class="note" data-i="privBody"></div>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="h-me">
+    <h2 id="h-me" data-i="me">내 정보</h2>
+    <div class="grid2">
+      <div class="field"><label for="birth" data-i="birth">생년월일</label><input id="birth" type="date" value="1970-06-15"></div>
+      <div class="field"><label for="hire" data-i="hire">입사일</label><input id="hire" type="date"></div>
+    </div>
+    <div class="hint" id="birthHint" data-i="birthHint">생년월일은 예시 값입니다. 본인 날짜로 바꿔 주세요.</div>
+    <div class="field">
+      <label data-i="plan">연금 플랜</label>
+      <div class="seg" role="group" aria-label="Plan">
+        <button type="button" id="planDB" aria-pressed="true"><span data-i="planDB">확정급여 DB</span><small data-i="planDBs">2016-01-22 이전 입사</small></button>
+        <button type="button" id="planMEPP" aria-pressed="false">IAM MEPP<small data-i="planMEPPs">2016-01-22 이후 입사</small></button>
+      </div>
+      <div class="hint" id="planHint"></div>
+    </div>
+    <div class="grid2">
+      <div class="field"><label for="salary" data-i="salary">최근 연봉 (CAD, 오버타임 포함)</label><input id="salary" type="number" inputmode="decimal" step="500" value="75000"></div>
+      <div class="field"><label for="raise" data-i="raise">매년 인상률 (%)</label><input id="raise" type="number" inputmode="decimal" step="0.1" value="2.5"></div>
+    </div>
+    <details class="stub" id="stubBox">
+      <summary data-i="stubSum">급여 명세서 이미지로 연봉 채우기</summary>
+      <div class="stub-in">
+        <p class="hint" data-i="stubHelp"></p>
+        <label class="upload" for="stubFiles"><span data-i="stubPick">명세서 화면 선택</span><input id="stubFiles" type="file" accept="image/*" multiple></label>
+        <div class="hint" id="ocrStatus" aria-live="polite"></div>
+        <div class="grid2">
+          <div class="field"><label for="sAsOf" data-i="sAsOf">명세서 누적 기준일</label><input id="sAsOf" type="date"></div>
+          <div class="field"><label for="sRate" data-i="sRate">본인 연금 기여율 (%)</label><input id="sRate" type="number" inputmode="decimal" step="0.05" value="5.25"></div>
+          <div class="field"><label for="sPen" data-i="sPen">연금 공제액 YTD ($)</label><input id="sPen" type="number" inputmode="decimal" step="0.01"></div>
+          <div class="field"><label for="sGross" data-i="sGross">총급여 YTD ($, 선택)</label><input id="sGross" type="number" inputmode="decimal" step="0.01"></div>
+          <div class="field"><label for="sPS" data-i="sPS">이익배분금 YTD ($, 선택)</label><input id="sPS" type="number" inputmode="decimal" step="0.01"></div>
+        </div>
+        <table class="rows" id="stubOut"></table>
+        <div class="hint" id="stubCheck"></div>
+        <button type="button" class="apply" id="stubApply" data-i="sApply" disabled>이 금액을 최근 연봉에 넣기</button>
+      </div>
+    </details>
+    <div class="grid2">
+      <div class="field"><label for="cpp65" data-i="cpp65">65세 CPP 월 예상액 ($)</label><input id="cpp65" type="number" inputmode="decimal" step="10" value="1100"></div>
+      <div class="field"><label for="cppStart" data-i="cppStart">CPP 받기 시작 나이</label>
+        <select id="cppStart"><option>60</option><option>61</option><option>62</option><option>63</option><option>64</option><option selected>65</option><option>66</option><option>67</option><option>68</option><option>69</option><option>70</option></select></div>
+    </div>
+    <div class="hint" data-i="cppHint">CPP 예상액은 My Service Canada Account의 "65세 예상액"을 넣는 게 가장 정확합니다. 2026년 최대는 월 $1,507.65입니다.</div>
+    <div class="grid2">
+      <div class="field"><label for="resid" data-i="resid">18세 이후 캐나다 거주 (년, 65세 기준)</label><input id="resid" type="number" inputmode="numeric" step="1" value="40"></div>
+      <div class="field"><label for="oasStart" data-i="oasStart">OAS 받기 시작 나이</label>
+        <select id="oasStart"><option selected>65</option><option>66</option><option>67</option><option>68</option><option>69</option><option>70</option></select></div>
+    </div>
+    <div class="field"><label for="custom" data-i="custom">비교해 볼 다른 은퇴 나이</label><input id="custom" type="number" inputmode="decimal" step="0.5" min="50" max="71" value="62"></div>
+
+    <details>
+      <summary data-i="adv">고급 설정 (확인 안 된 값 포함)</summary>
+      <div class="grid2">
+        <div class="field"><label for="ympe">YMPE 2026 ($)</label><input id="ympe" type="number" step="100" value="74600"></div>
+        <div class="field"><label for="ympeG" data-i="ympeG">YMPE 연 증가율 (%)</label><input id="ympeG" type="number" step="0.1" value="3"></div>
+        <div class="field"><label for="cap" data-i="cap">2030년 이후 소득 상한 ($)</label><input id="cap" type="number" step="1000" value="102000"></div>
+        <div class="field"><label for="maxPer" data-i="maxPer">근속 1년당 최대 연금 ($)</label><input id="maxPer" type="number" step="5" value="1870"></div>
+        <div class="field"><label for="ded" data-i="ded">근속 차감 (개월, 무급휴직 등)</label><input id="ded" type="number" step="1" value="0"></div>
+        <div class="field"><label for="infl" data-i="infl">물가상승률 (%)</label><input id="infl" type="number" step="0.1" value="2"></div>
+        <div class="field"><label for="idx" data-i="idx">은퇴 후 회사연금 물가연동 (%/년) ⚠️</label><input id="idx" type="number" step="0.1" value="0"></div>
+        <div class="field"><label for="meppRate" data-i="meppRate">MEPP 적립률 (기여금 $1당 연금 %) ⚠️</label><input id="meppRate" type="number" step="0.005" value="1.265"></div>
+        <div class="field"><label for="meppC" data-i="meppC">MEPP 총 기여율 (연봉 대비 %) ⚠️</label><input id="meppC" type="number" step="0.5" value="10"></div>
+        <div class="field"><label for="meppNow" data-i="meppNow">MEPP 현재까지 적립 연금 ($/년)</label><input id="meppNow" type="number" step="100" value="0"></div>
+        <div class="field"><label for="oasMax" data-i="oasMax">OAS 최대 월액 ($)</label><input id="oasMax" type="number" step="0.01" value="762.50"></div>
+      </div>
+      <p class="note" data-i="advNote"></p>
+    </details>
+  </section>
+
+  <section class="panel" aria-labelledby="h-dates">
+    <h2 id="h-dates" data-i="dates">주요 날짜</h2>
+    <div class="keydates" id="keydates"></div>
+  </section>
+
+  <div class="cards" id="cards" aria-live="polite"></div>
+
+  <section class="panel">
+    <h2 data-i="method">계산 방식</h2>
+    <div class="note" id="method"></div>
+  </section>
+
+  <div class="disclaimer" data-i="disc"></div>
+  <p class="note" style="text-align:center;margin:0">v1.4.1 · 2026-11-19</p>
+</div>
+
+<script src="tess/tesseract.min.js"></script>
+<script>
+(function(){
+  const YEAR = 365.2425*864e5;
+  const $ = id => document.getElementById(id);
+  const ids = ["birth","hire","salary","raise","cpp65","cppStart","resid","oasStart","custom","ympe","ympeG","cap","maxPer","ded","infl","idx","meppRate","meppC","meppNow","oasMax"];
+  const KEY = "ac-pension-calc-v1";
+  let plan = "DB", planTouched = false, lang = "ko";
+
+  const SRC = "Air Canada Pension Plan Information Notice (2026-10), IAM&amp;AW 2323 Air Canada Pension Seminar (2018), IAM 140 TA Highlights (2026-06), IAM MEPP (2026-03), Canada.ca CPP·OAS 2026.";
+  const TX = {
+    ko: {
+      title:"나의 연금 계산기",
+      sub:"회사 연금 + CPP + OAS 예상액. 금액은 모두 <b>오늘 돈 가치(세전, 월)</b>로 보여줍니다.",
+      me:"내 정보", birth:"생년월일", hire:"입사일", birthHint:"생년월일은 예시 값입니다. 본인 날짜로 바꿔 주세요.",
+      plan:"연금 플랜", planDB:"확정급여 DB", planDBs:"2016-01-22 이전 입사", planMEPPs:"2016-01-22 이후 입사",
+      salary:"최근 연봉 (CAD, 오버타임 포함)", raise:"매년 인상률 (%)", cpp65:"65세 CPP 월 예상액 ($)", cppStart:"CPP 받기 시작 나이",
+      cppHint:"CPP 예상액은 My Service Canada Account의 \"65세 예상액\"을 넣는 게 가장 정확합니다. 2026년 최대는 월 $1,507.65입니다.",
+      resid:"18세 이후 캐나다 거주 (년, 65세 기준)", oasStart:"OAS 받기 시작 나이", custom:"비교해 볼 다른 은퇴 나이",
+      adv:"고급 설정 (확인 안 된 값 포함)", ympeG:"YMPE 연 증가율 (%)", cap:"2030년 이후 소득 상한 ($)", maxPer:"근속 1년당 최대 연금 ($)",
+      ded:"근속 차감 (개월, 무급휴직 등)", infl:"물가상승률 (%)", idx:"은퇴 후 회사연금 물가연동 (%/년) ⚠️",
+      meppRate:"MEPP 적립률 (기여금 $1당 연금 %) ⚠️", meppC:"MEPP 총 기여율 (연봉 대비 %) ⚠️", meppNow:"MEPP 현재까지 적립 연금 ($/년)", oasMax:"OAS 최대 월액 ($)",
+      advNote:"소득 상한과 1년당 최대 연금은 2026년 10월 회사 연금 안내문(TMOS) 기준입니다. 상한은 은퇴 연도에 따라 2026년 $94,000, 2027년 $96,000, 2028년 $98,000, 2029년 $100,000, 2030년 이후 위 값이 모든 근속에 적용됩니다. 1년당 최대 연금은 2027년 1월부터 $1,870입니다(그 전 은퇴는 $1,715).<br>⚠️ 표시 값은 확인되지 않았습니다. 물가연동은 2028년·2030년 1월에 1.5%씩 조건부(적립비율 140% 초과 시)라서 기본 0%로 두었습니다. MEPP 기여율과 적립률은 본인 MEPP 연간 명세서로 맞춰 주세요.",
+      dates:"주요 날짜", method:"계산 방식",
+      infoH:"폰에 설치하기 · 개인정보", iosH:"아이폰 (Safari)", andH:"안드로이드 (Chrome)", privH:"내 데이터는 어디에 저장되나요?",
+      iosSteps:"<li>이 앱 링크를 <b>Safari</b>로 엽니다. (카톡·문자 안에서 열렸다면 오른쪽 아래 메뉴에서 \"Safari로 열기\")</li><li>아래쪽 가운데 <b>공유 버튼</b>(네모에 위 화살표)을 누릅니다.</li><li>목록을 내려서 <b>\"홈 화면에 추가\"</b>를 누릅니다.</li><li>이름을 \"연금 계산기\"로 바꾸고 오른쪽 위 <b>\"추가\"</b>를 누르면 홈 화면에 아이콘이 생깁니다.</li>",
+      andSteps:"<li>이 앱 링크를 <b>Chrome</b>으로 엽니다.</li><li>오른쪽 위 <b>점 3개(⋮) 메뉴</b>를 누릅니다.</li><li><b>\"홈 화면에 추가\"</b> 또는 <b>\"앱 설치\"</b>를 누릅니다.</li><li><b>\"추가\"</b>를 누르면 홈 화면에 아이콘이 생깁니다.</li>",
+      privBody:"<b>입력한 숫자와 올린 급여 명세서 이미지는 서버로 보내지 않습니다.</b> 명세서 글자 인식도 이 폰 안에서 처리합니다. 입력값은 이 폰의 브라우저 저장 공간에만 남고, 다른 사람이나 다른 기기에서는 보이지 않습니다.<br><br>앱을 열 때 인터넷에서 받는 것은 앱 화면, 글꼴, 글자 인식 프로그램 같은 <b>앱 파일뿐</b>입니다. 로그인이나 회원가입은 필요 없습니다.<br><br>주의: 브라우저의 방문 기록·사이트 데이터를 지우면 저장된 입력값도 지워집니다. 아이폰에서는 홈 화면 아이콘과 Safari가 저장 공간을 따로 쓰기 때문에 한쪽에서 넣은 값이 다른 쪽에 안 보일 수 있습니다.",
+      stubSum:"급여 명세서 이미지로 연봉 채우기", stubPick:"명세서 화면 선택 (여러 장 가능)",
+      stubHelp:"급여 앱의 <b>Deductions (YTD)</b> 화면은 꼭 올려 주세요. 연금 공제액이 있습니다. <b>Gross Earnings (YTD)</b> 화면도 올리면 금액을 서로 맞춰 봅니다. 이미지는 이 폰 안에서만 읽고 어디에도 보내지 않습니다. 읽은 숫자는 아래에서 직접 고칠 수 있습니다.",
+      sAsOf:"명세서 누적 기준일 (마지막 급여일)", sRate:"본인 연금 기여율 (%)", sPen:"연금 공제액 YTD ($)", sGross:"총급여 YTD ($, 선택)", sPS:"이익배분금 YTD ($, 선택)",
+      sApply:"이 금액을 최근 연봉에 넣기",
+      oLoad:"글자 인식 준비 중… (처음 한 번은 몇 초 걸립니다)", oRead:(i,n,p)=>`${n}장 중 ${i}번째 읽는 중… ${p}%`,
+      oDone:f=>`읽기 완료: ${f.join(", ") || "찾은 항목 없음. 숫자를 직접 입력해 주세요."}`, oFail:"이 폰에서 글자 인식을 실행하지 못했습니다. 숫자를 직접 입력해 주세요.",
+      fPen:"연금 공제액", fGross:"총급여", fPS:"이익배분금",
+      rPenYTD:"연금 인정 소득 YTD (공제액 ÷ 기여율)", rGrossPS:"총급여 − 이익배분금 YTD", rDays:"기준일까지 지난 날", rAnnual:"1년 환산 연봉 (연금 인정)",
+      rContrib:"실제 본인 기여율 (공제액 ÷ 총급여)",
+      cOk:p=>`두 화면 금액 차이 ${p}%: 서로 맞습니다.`, cBad:p=>`두 화면 금액 차이 ${p}%: 숫자를 한 번 확인해 주세요. (기여율이 다르거나 공제 안 되는 수당이 있을 수 있습니다)`,
+      cMEPP:"MEPP는 공제액이 본인 기여금이라 총급여 − 이익배분금으로 연봉을 계산합니다.",
+      sApplied:"최근 연봉에 넣었습니다.", days:d=>`${d}일`,
+      disc:"공개 자료를 바탕으로 한 <b>추정치</b>입니다. 세금 공제 전 금액이며, 실제 연금은 에어캐나다 Pension Centre 공식 명세서와 퇴직 견적이 기준입니다. 출처: " + SRC,
+      // dynamic
+      need:"생년월일과 입사일을 입력해 주세요.", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
+      kd80:"80점 도달", kd60:"60세", kd65:"65세", past:"지남",
+      c80:"80점 은퇴", c6025:"60세 + 25년", c25:"25년 근속 (60세 이후)", c60:"60세 은퇴", c65:"65세 은퇴", cAge:a=>`${a}세 은퇴`, nowSfx:" (지금 은퇴 시)",
+      yrs:(y,m)=>`${y}년 ${m}개월`, age:(y,m)=>m?`${y}세 ${m}개월`:`${y}세`,
+      sNorm:"정상 은퇴 · 감액 없음", s80:"80점 · 감액 없음 (회사 동의 조건)", sEarly:p=>`65세 전 조기 · ${p}% 감액`, sElig:" (즉시 연금 자격 확인 필요)",
+      s63:"63세 이상 · 감액 없음", s6025:"60세+25년 · 감액 없음",
+      svc:(s,p)=>`근속 ${s} · ${p}점`, mo:" /월",
+      before65pen:"은퇴~65세 (회사연금만)", before65cpp:"은퇴~65세 (회사연금+CPP)", rightAfter:"은퇴 직후 월 수입", after:a=>`${a}세 이후 (전부 합계)`,
+      line:(p,c,o)=>`회사연금 ${p}/월 · CPP ${c} · OAS ${o}`, details:"계산 내역",
+      dAvg:"최고 36개월 평균소득 (그때 돈)", dCap:c=>` → 상한 ${c}`, dY:"평균 YMPE (그때 돈)",
+      dBelow:(b,s)=>`YMPE 이하 ${b} × 1.75% × ${s}년`, dAbove:(b,s)=>`YMPE 초과 ${b} × 2.0% × ${s}년`, d35:"근속 최대 35년 적용",
+      dMax:m=>`1년당 최대 ${m} 한도 적용`, dBase:"감액 전 연금 (그때 돈, 연)",
+      dMNow:"현재 적립 연금", dMFut:r=>`앞으로 기여금 × ${r}%`,
+      dPenNom:"회사연금 (그때 돈, 월)", dCpp:a=>`CPP ${a}세 시작 (오늘 돈, 월)`, dOas:a=>`OAS ${a}세 시작 (오늘 돈, 월)`, dClaw:"OAS 환수 (클로백, 월)",
+      dErode:"65세까지 물가로 줄어드는 회사연금 가치",
+      mDB:`<b>DB 플랜:</b> 연금 = 근속(최대 35년) × [평균소득 중 YMPE 이하 × 1.75% + 초과분 × 2.0%]. 평균소득은 은퇴 전 3년 연봉 평균(최고 36개월 근사)이고, 은퇴 연도의 소득 상한($94,000~$102,000)과 근속 1년당 최대 연금($1,870)을 넘지 않게 계산합니다. 55세 이상 + 80점이면 감액이 없고, 그 외에는 65세까지 1년마다 6% 복리 감액(60세 26.6%)입니다. "Higher to 65"·배우자(J&S 60%) 옵션은 반영하지 않았습니다(J&S 50% 기본형 기준).<br><br><b>CPP:</b> 65세 전 월 0.6% 감액, 65세 후 월 0.7% 증액. <b>OAS:</b> 40년 거주 기준 전액, 연기 시 월 0.6% 증액, 연 소득 $95,323 초과분의 15% 환수.<br><br>은퇴 시점 금액은 물가상승률로 나눠 <b>오늘 돈 가치</b>로 바꿨습니다. 회사연금 물가연동은 2028년·2030년 1.5%씩 조건부라서 기본 0%로 두었고, 그래서 65세 이후 실질 가치가 조금 줄어듭니다.`,
+      mMEPP:`<b>IAM MEPP:</b> 매년 낸 기여금(회사+본인) × 적립률만큼 평생 연금이 쌓입니다. 2027년 이후 은퇴 시 63세 이상, 또는 60세 이상 + 25년 근속이면 감액이 없고, 그 외에는 65세 전 월 0.5% 감액입니다. 기여율과 적립률은 공개 자료에서 확인되지 않아 고급 설정에서 명세서 값으로 바꿔야 정확합니다.<br><br><b>CPP·OAS</b> 규칙은 DB와 같습니다. 금액은 오늘 돈 가치입니다.`
+    },
+    en: {
+      title:"My Pension Calculator",
+      sub:"Estimated company pension + CPP + OAS. All amounts are <b>monthly, before tax, in today's dollars</b>.",
+      me:"My details", birth:"Date of birth", hire:"Hire date", birthHint:"The date of birth is a sample. Change it to yours.",
+      plan:"Pension plan", planDB:"Defined Benefit (DB)", planDBs:"Hired before 2016-01-22", planMEPPs:"Hired on/after 2016-01-22",
+      salary:"Recent annual pay (CAD, incl. overtime)", raise:"Yearly raise (%)", cpp65:"CPP at 65, monthly estimate ($)", cppStart:"CPP start age",
+      cppHint:"For the most accurate CPP figure, use the \"estimate at 65\" in your My Service Canada Account. The 2026 maximum is $1,507.65 a month.",
+      resid:"Years in Canada after age 18 (by 65)", oasStart:"OAS start age", custom:"Another retirement age to compare",
+      adv:"Advanced settings (includes unconfirmed values)", ympeG:"YMPE yearly growth (%)", cap:"Earnings cap from 2030 ($)", maxPer:"Max pension per year of service ($)",
+      ded:"Service to deduct (months, e.g. unpaid leave)", infl:"Inflation (%)", idx:"Pension indexing after retirement (%/yr) ⚠️",
+      meppRate:"MEPP accrual (% of each $1 contributed) ⚠️", meppC:"MEPP total contribution (% of pay) ⚠️", meppNow:"MEPP pension accrued so far ($/yr)", oasMax:"OAS maximum monthly ($)",
+      advNote:"The earnings cap and the per-year maximum come from Air Canada's October 2026 pension notice (TMOS). The cap depends on your retirement year: $94,000 in 2026, $96,000 in 2027, $98,000 in 2028, $100,000 in 2029, and the value above from 2030. It applies to all service. The maximum pension per year of service is $1,870 from January 2027 ($1,715 before).<br>⚠️ Values marked this way are not confirmed. Indexing is conditional (1.5% in January 2028 and 2030, only if the solvency ratio exceeds 140%), so it defaults to 0%. Set the MEPP rates from your annual MEPP statement.",
+      dates:"Key dates", method:"How it's calculated",
+      infoH:"Install on your phone · Privacy", iosH:"iPhone (Safari)", andH:"Android (Chrome)", privH:"Where is my data stored?",
+      iosSteps:"<li>Open this app's link in <b>Safari</b>. (If it opened inside a messaging app, use its menu to \"Open in Safari\".)</li><li>Tap the <b>Share button</b> (square with an up arrow) at the bottom.</li><li>Scroll down and tap <b>\"Add to Home Screen\"</b>.</li><li>Rename it \"Pension\" if you like, then tap <b>\"Add\"</b> at the top right. The icon appears on your home screen.</li>",
+      andSteps:"<li>Open this app's link in <b>Chrome</b>.</li><li>Tap the <b>three-dot menu (⋮)</b> at the top right.</li><li>Tap <b>\"Add to Home screen\"</b> or <b>\"Install app\"</b>.</li><li>Tap <b>\"Add\"</b>. The icon appears on your home screen.</li>",
+      privBody:"<b>The numbers you enter and the pay stub images you upload are never sent to a server.</b> Pay stub text is read on this phone. Your inputs are kept only in this phone's browser storage, and no one else or any other device can see them.<br><br>When the app opens, it only downloads <b>app files</b>: the page, fonts and the text-reading program. No sign-in or account is needed.<br><br>Note: clearing your browser's history or site data also clears saved inputs. On iPhone, the home screen icon and Safari keep separate storage, so values entered in one may not show in the other.",
+      stubSum:"Fill in pay from pay stub screenshots", stubPick:"Choose pay stub screens (several OK)",
+      stubHelp:"Upload the <b>Deductions (YTD)</b> screen from your pay app. It has your pension deduction. Add the <b>Gross Earnings (YTD)</b> screen too and the app will cross-check the amounts. Images are read only on this phone and never sent anywhere. You can correct any number below.",
+      sAsOf:"Year-to-date as of (last pay date)", sRate:"Your pension contribution rate (%)", sPen:"Pension deduction YTD ($)", sGross:"Gross earnings YTD ($, optional)", sPS:"Profit sharing YTD ($, optional)",
+      sApply:"Use this as my recent annual pay",
+      oLoad:"Getting text reader ready… (a few seconds the first time)", oRead:(i,n,p)=>`Reading image ${i} of ${n}… ${p}%`,
+      oDone:f=>`Done. Found: ${f.join(", ") || "nothing. Please type the numbers in."}`, oFail:"Text reading couldn't run on this phone. Please type the numbers in.",
+      fPen:"pension deduction", fGross:"gross earnings", fPS:"profit sharing",
+      rPenYTD:"Pensionable pay YTD (deduction ÷ rate)", rGrossPS:"Gross − profit sharing YTD", rDays:"Days covered", rAnnual:"Annualized pay (pensionable)",
+      rContrib:"Actual contribution rate (deduction ÷ gross)",
+      cOk:p=>`The two screens differ by ${p}%: they match.`, cBad:p=>`The two screens differ by ${p}%: please check the numbers. (The rate may differ, or some pay isn't pensionable.)`,
+      cMEPP:"For MEPP the deduction is your own contribution, so pay is based on gross minus profit sharing.",
+      sApplied:"Added to recent annual pay.", days:d=>`${d} days`,
+      disc:"This is an <b>estimate</b> based on public information, before tax. Your official Air Canada pension statement and retirement quote are what count. Sources: " + SRC,
+      need:"Enter your date of birth and hire date.", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
+      kd80:"80 points", kd60:"Age 60", kd65:"Age 65", past:"passed",
+      c80:"Retire at 80 points", c6025:"Age 60 + 25 years", c25:"25 years of service (after 60)", c60:"Retire at 60", c65:"Retire at 65", cAge:a=>`Retire at ${a}`, nowSfx:" (if you retire now)",
+      yrs:(y,m)=>`${y} yr ${m} mo`, age:(y,m)=>m?`age ${y} yr ${m} mo`:`age ${y}`,
+      sNorm:"Normal retirement · no reduction", s80:"80 points · no reduction (with company consent)", sEarly:p=>`Early, before 65 · ${p}% reduction`, sElig:" (check eligibility for immediate pension)",
+      s63:"Age 63+ · no reduction", s6025:"60 + 25 years · no reduction",
+      svc:(s,p)=>`Service ${s} · ${p} points`, mo:" /mo",
+      before65pen:"Retirement to 65 (pension only)", before65cpp:"Retirement to 65 (pension + CPP)", rightAfter:"Monthly income at retirement", after:a=>`From age ${a} (all sources)`,
+      line:(p,c,o)=>`Pension ${p}/mo · CPP ${c} · OAS ${o}`, details:"Calculation details",
+      dAvg:"Best 36-month average pay (future $)", dCap:c=>` → capped at ${c}`, dY:"Average YMPE (future $)",
+      dBelow:(b,s)=>`Up to YMPE ${b} × 1.75% × ${s} yrs`, dAbove:(b,s)=>`Above YMPE ${b} × 2.0% × ${s} yrs`, d35:"35-year service maximum applied",
+      dMax:m=>`Max ${m} per year of service applied`, dBase:"Pension before reduction (future $, yearly)",
+      dMNow:"Pension accrued so far", dMFut:r=>`Future contributions × ${r}%`,
+      dPenNom:"Company pension (future $, monthly)", dCpp:a=>`CPP from ${a} (today's $, monthly)`, dOas:a=>`OAS from ${a} (today's $, monthly)`, dClaw:"OAS clawback (monthly)",
+      dErode:"Pension value lost to inflation by 65",
+      mDB:`<b>DB plan:</b> pension = service (max 35 years) × [1.75% of average pay up to the YMPE + 2.0% above it]. Average pay is the average of your last 3 years (close to the best 36 months), limited by the earnings cap for your retirement year ($94,000 to $102,000) and the $1,870 maximum per year of service. At 55 or older with 80 points there is no reduction; otherwise it drops about 6% a year (compounded) before 65, so 26.6% at 60. The "Higher to 65" and J&S 60% spouse options are not included (based on the standard J&S 50% form).<br><br><b>CPP:</b> −0.6% per month before 65, +0.7% per month after. <b>OAS:</b> full amount with 40 years in Canada, +0.6% per month if delayed, 15% clawback on income over $95,323.<br><br>Amounts at retirement are divided by inflation to show <b>today's dollars</b>. Pension indexing is only conditional (1.5% in 2028 and 2030), so it defaults to 0% and the pension's real value shrinks a little after retirement.`,
+      mMEPP:`<b>IAM MEPP:</b> each year's contributions (company + you) × the accrual rate add to a lifetime pension. For retirements from 2027, there is no reduction at 63+, or at 60+ with 25 years of service; otherwise −0.5% per month before 65. Contribution and accrual rates aren't public, so set them from your statement in Advanced settings.<br><br><b>CPP and OAS</b> work the same as for DB. Amounts are in today's dollars.`
+    }
+  };
+  const T = k => TX[lang][k];
+
+  // Hire date starts as today's date on this phone until the person enters their own.
+  { const n = new Date(); $("hire").value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
+  try {
+    const saved = JSON.parse(localStorage.getItem(KEY) || "null");
+    if (saved) {
+      ids.forEach(k => { if (saved[k] !== undefined) $(k).value = saved[k]; });
+      if (saved.plan) { plan = saved.plan; planTouched = !!saved.planTouched; }
+      if (saved.birthSet) $("birthHint").hidden = true;
+      if (saved.lang === "en") lang = "en";
+    }
+  } catch (e) {}
+
+  function save(){
+    try {
+      const o = {plan, planTouched, lang, birthSet: $("birthHint").hidden};
+      ids.forEach(k => o[k] = $(k).value);
+      localStorage.setItem(KEY, JSON.stringify(o));
+    } catch (e) {}
+  }
+
+  function applyLang(){
+    document.documentElement.lang = lang;
+    document.title = T("title");
+    document.querySelectorAll("[data-i]").forEach(el => { el.innerHTML = T(el.dataset.i); });
+    $("langKO").setAttribute("aria-pressed", lang === "ko");
+    $("langEN").setAttribute("aria-pressed", lang === "en");
+  }
+  $("langKO").addEventListener("click", () => { lang = "ko"; applyLang(); run(); });
+  $("langEN").addEventListener("click", () => { lang = "en"; applyLang(); run(); });
+
+  const num = id => { const v = parseFloat($(id).value); return isFinite(v) ? v : 0; };
+  const parseD = s => { const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m ? new Date(Date.UTC(+m[1], +m[2]-1, +m[3])) : null; };
+  const yrs = (a,b) => (b - a) / YEAR;
+  const addY = (d,y) => new Date(d.getTime() + y*YEAR);
+  const ageDate = (birth, age) => { const whole = Math.floor(age); const d = new Date(Date.UTC(birth.getUTCFullYear()+whole, birth.getUTCMonth(), birth.getUTCDate())); return addY(d, age - whole); };
+  const fmtD = d => `${d.getUTCFullYear()}.${String(d.getUTCMonth()+1).padStart(2,"0")}.${String(d.getUTCDate()).padStart(2,"0")}`;
+  const money = v => "$" + Math.round(v).toLocaleString("en-CA");
+  const fmtY = y => { const t = Math.max(0, Math.round(y*12)); return T("yrs")(Math.floor(t/12), t%12); };
+  const fmtAge = a => { const t = Math.round(a*12); return T("age")(Math.floor(t/12), t%12); };
+
+  const SPLIT = Date.UTC(2016,0,22);
+
+  function setPlan(p, user){
+    plan = p; if (user) planTouched = true;
+    $("planDB").setAttribute("aria-pressed", p==="DB");
+    $("planMEPP").setAttribute("aria-pressed", p==="MEPP");
+  }
+  $("planDB").addEventListener("click", () => { setPlan("DB", true); run(); });
+  $("planMEPP").addEventListener("click", () => { setPlan("MEPP", true); run(); });
+
+  function cppFactor(age){ return age < 65 ? 1 - 0.006*(65-age)*12 : 1 + 0.007*Math.min(5,(age-65))*12; }
+
+  function compute(R, I){
+    const {birth, hire, now} = I;
+    const age = yrs(birth, R);
+    const svcRaw = Math.max(0, yrs(hire, R) - I.ded/12);
+    const svc = Math.min(35, svcRaw);
+    const points = age + svcRaw;
+    const tNow = yrs(now, R);
+    const deflR = Math.pow(1+I.infl, Math.max(0,tNow));
+    const sal = t => I.salary * Math.pow(1+I.raise, yrs(now, t));
+    const ympe = t => I.ympe * Math.pow(1+I.ympeG, yrs(now, t));
+    let annualNom = 0, reduction = 0, status, statusCls, detail = [];
+
+    if (I.plan === "DB") {
+      const pts = [0.5,1.5,2.5].map(k => addY(R, -k));
+      const avgSal = pts.reduce((s,t)=>s+sal(t),0)/3;
+      const ry = R.getUTCFullYear();
+      const cap = ry <= 2026 ? 94000 : ry === 2027 ? 96000 : ry === 2028 ? 98000 : ry === 2029 ? 100000 : I.cap;
+      const aac = Math.min(avgSal, cap);
+      const y = pts.reduce((s,t)=>s+ympe(t),0)/3;
+      const below = Math.min(aac, y), above = Math.max(0, aac - y);
+      const formula = svc * (0.0175*below + 0.02*above);
+      const maxPer = ry <= 2026 ? 1715 : I.maxPer;
+      const base = Math.min(formula, svc * maxPer);
+      if (age >= 65 - 1e-9) { reduction = 0; status = T("sNorm"); statusCls = "good"; }
+      else if (age >= 55 - 1e-9 && points >= 80 - 1e-9) { reduction = 0; status = T("s80"); statusCls = "good"; }
+      else {
+        reduction = 1 - Math.pow(0.94, 65 - age);
+        const eligible = svcRaw >= 25 || points >= 80;
+        status = T("sEarly")((reduction*100).toFixed(1)) + (eligible ? "" : T("sElig"));
+        statusCls = reduction > 0.2 ? "bad" : "warn";
+      }
+      annualNom = base * (1 - reduction);
+      detail.push([T("dAvg"), money(avgSal) + (avgSal > cap ? T("dCap")(money(cap)) : "")]);
+      detail.push([T("dY"), money(y)]);
+      detail.push([T("dBelow")(money(below), svc.toFixed(2)), money(svc*0.0175*below)]);
+      detail.push([T("dAbove")(money(above), svc.toFixed(2)), money(svc*0.02*above)]);
+      if (svcRaw > 35) detail.push([T("d35"), ""]);
+      if (formula > base) detail.push([T("dMax")(money(maxPer)), money(base)]);
+      detail.push([T("dBase"), money(base)]);
+    } else {
+      let acc = I.meppNow; const step = 1/12;
+      for (let t = 0; t < tNow; t += step) { const d = addY(now, t); acc += sal(d) * I.meppC * step * I.meppRate; }
+      const unreduced = age >= 63 - 1e-9 || (age >= 60 - 1e-9 && svcRaw >= 25);
+      reduction = unreduced ? 0 : Math.min(1, Math.max(0, 0.005 * (65-age) * 12));
+      if (age >= 65 - 1e-9) { status = T("sNorm"); statusCls = "good"; }
+      else if (unreduced) { status = age >= 63 ? T("s63") : T("s6025"); statusCls = "good"; }
+      else { status = T("sEarly")((reduction*100).toFixed(1)); statusCls = reduction > 0.2 ? "bad" : "warn"; }
+      annualNom = acc * (1 - reduction);
+      detail.push([T("dMNow"), money(I.meppNow)]);
+      detail.push([T("dMFut")((I.meppRate*100).toFixed(3)), money(acc - I.meppNow)]);
+      detail.push([T("dBase"), money(acc)]);
+    }
+
+    const pensionReal = annualNom / deflR / 12;
+    const d65 = ageDate(birth, 65);
+    const after = Math.max(0, yrs(R, d65));
+    const pension65Real = age >= 65 ? pensionReal : annualNom * Math.pow(1+I.idx, after) / Math.pow(1+I.infl, Math.max(0,yrs(now,d65))) / 12;
+
+    const cppAge = Math.max(I.cppStart, 60);
+    const cpp = I.cpp65 * cppFactor(cppAge);
+    const oasAge = Math.min(70, Math.max(65, I.oasStart));
+    const oas = I.oasMax * Math.min(40, Math.max(0, I.resid)) / 40 * (1 + 0.006*(oasAge-65)*12);
+    const income65 = (pension65Real + cpp + oas) * 12;
+    const claw = Math.min(oas*12, Math.max(0, 0.15*(income65 - 95323))) / 12;
+    const before = pensionReal + (cppAge <= age ? cpp : 0);
+    const later = pension65Real + cpp + oas - claw;
+
+    detail.push([T("dPenNom"), money(annualNom/12)]);
+    detail.push([T("dCpp")(cppAge), money(cpp)]);
+    detail.push([T("dOas")(oasAge), money(oas)]);
+    if (claw > 0) detail.push([T("dClaw"), "−" + money(claw)]);
+    if (age < 65 && I.idx < I.infl) detail.push([T("dErode"), `${money(pensionReal)} → ${money(pension65Real)}`]);
+
+    return {R, age, svcRaw, points, pensionReal, before, later, cpp, oas, claw, status, statusCls, detail, cppAge, oasAge};
+  }
+
+  function card(title, r, best){
+    const beforeLbl = r.age >= 65 ? T("rightAfter") : (r.cppAge <= r.age ? T("before65cpp") : T("before65pen"));
+    return `<article class="card${best ? " best" : ""}">
+      <div class="card-hd"><h3>${title}</h3><span class="when">${fmtD(r.R)} · ${fmtAge(r.age)}</span></div>
+      <div class="card-bd">
+        <div class="meta"><span class="pill ${r.statusCls}">${r.status}</span><span>${T("svc")(fmtY(r.svcRaw), r.points.toFixed(1))}</span></div>
+        <div class="phases">
+          <div class="phase"><div class="lbl">${beforeLbl}</div><div class="amt">${money(r.age >= 65 ? r.later : r.before)}<small>${T("mo")}</small></div></div>
+          <div class="phase"><div class="lbl">${T("after")(r.oasAge)}</div><div class="amt">${money(r.later)}<small>${T("mo")}</small></div></div>
+        </div>
+        <div class="meta">${T("line")(money(r.pensionReal), money(r.cpp), money(r.oas - r.claw))}</div>
+        <details><summary>${T("details")}</summary>
+          <table class="rows">${r.detail.map(([a,b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join("")}</table>
+        </details>
+      </div></article>`;
+  }
+
+  function run(){
+    const birth = parseD($("birth").value), hire = parseD($("hire").value);
+    if (!birth || !hire) { $("cards").innerHTML = `<div class="panel"><p class="note">${T("need")}</p></div>`; return; }
+    if (!planTouched) setPlan(hire.getTime() < SPLIT ? "DB" : "MEPP", false);
+    $("planHint").textContent = (hire.getTime() < SPLIT) === (plan === "DB") ? T("planOk") : T("planDiff");
+    const now = new Date(); const today = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate()));
+    const I = { birth, hire, now: today, plan,
+      salary:num("salary"), raise:num("raise")/100, cpp65:num("cpp65"), cppStart:num("cppStart"), resid:num("resid"), oasStart:num("oasStart"),
+      ympe:num("ympe"), ympeG:num("ympeG")/100, cap:num("cap"), maxPer:num("maxPer"), ded:num("ded"), infl:num("infl")/100, idx:num("idx")/100,
+      meppRate:num("meppRate")/100, meppC:num("meppC")/100, meppNow:num("meppNow"), oasMax:num("oasMax") };
+
+    // 80-point date: age + service = 80  →  midpoint(birth, hire) + 40y (+ deducted service), not before age 55
+    const p80 = new Date((birth.getTime() + hire.getTime())/2 + 40*YEAR + (I.ded/24)*YEAR);
+    const d55 = ageDate(birth,55), d60 = ageDate(birth,60), d65 = ageDate(birth,65);
+    const p80eff = p80 < d55 ? d55 : p80;
+
+    const kd = [[T("kd80"), p80], [T("kd60"), d60], [T("kd65"), d65]];
+    $("keydates").innerHTML = kd.map(([l,d]) => `<div class="kd"><b>${fmtD(d)}</b><span>${l}${d < today ? " · " + T("past") : ""}</span></div>`).join("");
+
+    const list = [];
+    if (plan === "DB") list.push([T("c80"), p80eff]);
+    else { const s25 = addY(hire, 25 + I.ded/12); const d = new Date(Math.max(d60.getTime(), s25.getTime())); list.push([d.getTime()===d60.getTime() ? T("c6025") : T("c25"), d]); }
+    list.push([T("c60"), d60], [T("c65"), d65]);
+    const c = Math.min(71, Math.max(50, num("custom")));
+    list.push([T("cAge")(c), ageDate(birth, c)]);
+    $("cards").innerHTML = list.map(([t,d],i) => { const past = d < today; return card(t + (past ? T("nowSfx") : ""), compute(past ? today : d, I), i===0); }).join("");
+
+    $("method").innerHTML = plan === "DB" ? T("mDB") : T("mMEPP");
+    save();
+  }
+
+  ids.forEach(k => $(k).addEventListener("input", () => { if (k === "birth") $("birthHint").hidden = true; run(); }));
+
+  /* ---------- Pay stub reader (on-device OCR) ---------- */
+  const STUB_IDS = ["sAsOf","sRate","sPen","sGross","sPS"];
+  const STUB_KEY = "ac-pension-stub-v1";
+  try { const s = JSON.parse(localStorage.getItem(STUB_KEY) || "null"); if (s) STUB_IDS.forEach(k => { if (s[k] !== undefined) $(k).value = s[k]; }); } catch (e) {}
+  if (!$("sAsOf").value) { const n = new Date(); $("sAsOf").value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
+  let stubAnnual = 0, ocrMsg = null;
+
+  function stubCalc(){
+    try { const o = {}; STUB_IDS.forEach(k => o[k] = $(k).value); localStorage.setItem(STUB_KEY, JSON.stringify(o)); } catch (e) {}
+    const asOf = parseD($("sAsOf").value);
+    const pen = num("sPen"), rate = num("sRate")/100, gross = num("sGross"), ps = num("sPS");
+    const rows = []; stubAnnual = 0; let check = "", cls = "hint";
+    if (asOf) {
+      const jan1 = Date.UTC(asOf.getUTCFullYear(), 0, 1);
+      const days = Math.round((asOf - jan1)/864e5) + 1;
+      const yearDays = (Date.UTC(asOf.getUTCFullYear()+1,0,1) - jan1)/864e5;
+      const net = gross > 0 ? gross - ps : 0;
+      let ytd = 0;
+      if (plan === "DB" && pen > 0 && rate > 0) { ytd = pen / rate; rows.push([T("rPenYTD"), money(ytd)]); }
+      if (net > 0) rows.push([T("rGrossPS"), money(net)]);
+      if (plan === "MEPP") { ytd = net; if (net > 0 && pen > 0) rows.push([T("rContrib"), (pen/net*100).toFixed(2) + "%"]); check = T("cMEPP"); }
+      else if (ytd > 0 && net > 0) { const d = Math.abs(ytd - net)/net*100; check = d <= 3 ? T("cOk")(d.toFixed(1)) : T("cBad")(d.toFixed(1)); cls = d <= 3 ? "hint good" : "hint bad"; }
+      else if (!ytd && net > 0) ytd = net;
+      if (ytd > 0 && days > 0) {
+        stubAnnual = ytd * yearDays / days;
+        rows.push([T("rDays"), T("days")(days)], [T("rAnnual"), "<b>" + money(stubAnnual) + "</b>"]);
+      }
+    }
+    $("stubOut").innerHTML = rows.map(([a,b]) => `<tr><td>${a}</td><td>${b}</td></tr>`).join("");
+    $("stubCheck").textContent = check; $("stubCheck").className = cls;
+    $("stubApply").disabled = !(stubAnnual > 0);
+  }
+  STUB_IDS.forEach(k => $(k).addEventListener("input", stubCalc));
+  $("stubApply").addEventListener("click", () => {
+    if (!(stubAnnual > 0)) return;
+    $("salary").value = Math.round(stubAnnual); run();
+    ocrMsg = () => T("sApplied"); showOcr();
+  });
+  function showOcr(){ $("ocrStatus").textContent = ocrMsg ? ocrMsg() : ""; }
+
+  const AMT = /\$?\s?(\d{1,3}(?:[,.]\d{3})+|\d+)[.,](\d{2})(?!\d)/g;
+  const toNum = (a,b) => parseFloat(a.replace(/[,.]/g,"") + "." + b);
+  const amounts = s => { const out = []; let m; AMT.lastIndex = 0; while ((m = AMT.exec(s))) out.push(toNum(m[1], m[2])); return out; };
+  function findAfter(lines, re, not){
+    for (let i = 0; i < lines.length; i++) if (re.test(lines[i]) && !(not && not.test(lines[i]))) {
+      const a = amounts(lines[i]); if (a.length) return a[a.length-1];
+      for (let j = i+1; j < Math.min(lines.length, i+3); j++) { const b = amounts(lines[j]); if (b.length) return b[0]; }
+    }
+    return null;
+  }
+  function parseStub(text, found){
+    const lines = text.split(/\n+/).map(s => s.trim()).filter(Boolean);
+    const pen = findAfter(lines, /pension|mepp/i, /canada\s*pension\s*plan/i);
+    if (pen != null) found.pen = pen;
+    const ps = findAfter(lines, /profit/i); if (ps != null) found.ps = ps;
+    if (/gross/i.test(text)) { const all = amounts(text); if (all.length) found.gross = Math.max(...all); }
+  }
+
+  let workerP = null;
+  function getWorker(){
+    if (workerP) return workerP;
+    const base = new URL("tess/", location.href).href;
+    // The English model ships beside the page (gzipped, stored under a .wasm name so it can be served).
+    workerP = fetch(base + "lang/eng-traineddata-gz.wasm").then(r => { if (!r.ok) throw new Error("model " + r.status); return r.arrayBuffer(); })
+      .then(buf => Tesseract.createWorker([{ code: "eng", data: new Uint8Array(buf) }], 1, {
+      workerPath: base + "worker.min.js", corePath: base + "core/", cacheMethod: "none",
+      logger: m => { if (m.status === "recognizing text" && curJob) { curJob.p = Math.round(m.progress*100); ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr(); } }
+    }));
+    return workerP;
+  }
+  let curJob = null;
+  // Pay apps print amounts in light grey; turn the screenshot into black-on-white so they can be read.
+  async function prep(file){
+    const url = URL.createObjectURL(file);
+    try {
+      const img = await new Promise((ok, no) => { const i = new Image(); i.onload = () => ok(i); i.onerror = no; i.src = url; });
+      const c = document.createElement("canvas"); c.width = img.naturalWidth; c.height = img.naturalHeight;
+      const g = c.getContext("2d"); g.drawImage(img, 0, 0);
+      const d = g.getImageData(0, 0, c.width, c.height), p = d.data;
+      for (let k = 0; k < p.length; k += 4) { const l = 0.299*p[k] + 0.587*p[k+1] + 0.114*p[k+2]; const v = l < 200 ? 0 : 255; p[k] = p[k+1] = p[k+2] = v; }
+      g.putImageData(d, 0, 0);
+      return c;
+    } finally { URL.revokeObjectURL(url); }
+  }
+  $("stubFiles").addEventListener("change", async e => {
+    const files = [...e.target.files]; if (!files.length) return;
+    ocrMsg = () => T("oLoad"); showOcr();
+    try {
+      if (typeof Tesseract === "undefined") throw new Error("no lib");
+      const w = await getWorker();
+      const found = {};
+      for (let i = 0; i < files.length; i++) {
+        curJob = {i: i+1, n: files.length, p: 0}; ocrMsg = () => T("oRead")(curJob.i, curJob.n, curJob.p); showOcr();
+        const { data } = await w.recognize(await prep(files[i]));
+        parseStub(data.text, found);
+        if ((/deduction|pension/i.test(data.text) && found.pen == null) || (/gross/i.test(data.text) && found.ps == null)) { // second try on the original colours
+          const r2 = await w.recognize(files[i]); const f2 = {}; parseStub(r2.data.text, f2);
+          for (const k in f2) if (found[k] == null) found[k] = f2[k];
+        }
+      }
+      curJob = null;
+      const names = [];
+      if (found.pen != null) { $("sPen").value = found.pen.toFixed(2); names.push(`${T("fPen")} ${money(found.pen)}`); }
+      if (found.gross != null) { $("sGross").value = found.gross.toFixed(2); names.push(`${T("fGross")} ${money(found.gross)}`); }
+      if (found.ps != null) { $("sPS").value = found.ps.toFixed(2); names.push(`${T("fPS")} ${money(found.ps)}`); }
+      ocrMsg = () => T("oDone")(names); showOcr(); stubCalc();
+    } catch (err) {
+      console.error(err); workerP = null; curJob = null; ocrMsg = () => T("oFail"); showOcr();
+    }
+    e.target.value = "";
+  });
+  $("langKO").addEventListener("click", () => { showOcr(); stubCalc(); });
+  $("langEN").addEventListener("click", () => { showOcr(); stubCalc(); });
+  $("planDB").addEventListener("click", stubCalc);
+  $("planMEPP").addEventListener("click", stubCalc);
+
+  applyLang();
+  run();
+  stubCalc();
+})();
+</script>
+
+</body>
+</html>

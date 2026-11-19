@@ -1,0 +1,12 @@
+{
+  "name": "나의 연금 계산기 · My Pension Calculator",
+  "short_name": "연금 계산기",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#EEF1F4",
+  "theme_color": "#D9480F",
+  "icons": [
+    {"src": "icon-192.png", "sizes": "192x192", "type": "image/png"},
+    {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}
+  ]
+}

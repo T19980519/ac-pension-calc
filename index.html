@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
 <title>나의 연금 계산기</title>
-<meta name="description" content="Air Canada IAM&amp;AW pension + CPP + OAS estimator. All data stays on your phone.">
+<meta name="description" content="Personal pension (DB or MEPP) + CPP + OAS estimator. Unofficial. All data stays on your phone.">
 <meta name="theme-color" content="#D9480F">
 <link rel="manifest" href="manifest.webmanifest">
 <link rel="icon" href="icon-192.png" type="image/png">
@@ -131,9 +131,9 @@ details .grid2{margin-top:12px}
 
 <div class="wrap">
   <header>
-    <div class="tag">Air Canada · IAM&amp;AW</div>
+    <div class="tag">DB · MEPP · CPP · OAS</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.4</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.6.5</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -169,7 +169,7 @@ details .grid2{margin-top:12px}
       <label data-i="plan">연금 플랜</label>
       <div class="seg" role="group" aria-label="Plan">
         <button type="button" id="planDB" aria-pressed="true"><span data-i="planDB">확정급여 DB</span><small data-i="planDBs">2016-01-22 이전 입사</small></button>
-        <button type="button" id="planMEPP" aria-pressed="false">IAM MEPP<small data-i="planMEPPs">2016-01-22 이후 입사</small></button>
+        <button type="button" id="planMEPP" aria-pressed="false">MEPP<small data-i="planMEPPs">2016-01-22 이후 입사</small></button>
       </div>
       <div class="hint" id="planHint"></div>
     </div>
@@ -247,12 +247,12 @@ details .grid2{margin-top:12px}
   <div class="disclaimer" data-i="disc"></div>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.4</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.5</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.4</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.5</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -264,7 +264,7 @@ details .grid2{margin-top:12px}
   const KEY = "ac-pension-calc-v1";
   let plan = "DB", planTouched = false, lang = "ko";
 
-  const SRC = "Air Canada Pension Plan Information Notice (2026-10), IAM&amp;AW 2323 Air Canada Pension Seminar (2018), IAM 140 TA Highlights (2026-06), IAM MEPP (2026-03), Canada.ca CPP·OAS 2026.";
+  const SRC = "Pension plan notice (2026-10), pension seminar notes (2018), TA highlights (2026-06), MEPP information (2026-03), Canada.ca CPP·OAS 2026.";
   const TX = {
     ko: {
       title:"나의 연금 계산기",
@@ -277,7 +277,7 @@ details .grid2{margin-top:12px}
       adv:"고급 설정 (확인 안 된 값 포함)", ympeG:"YMPE 연 증가율 (%)", cap:"2030년 이후 소득 상한 ($)", maxPer:"근속 1년당 최대 연금 ($)",
       ded:"근속 차감 (개월, 무급휴직 등)", infl:"물가상승률 (%)", idx:"은퇴 후 회사연금 물가연동 (%/년) ⚠️",
       meppRate:"MEPP 적립률 (기여금 $1당 연금 %) ⚠️", meppC:"MEPP 총 기여율 (연봉 대비 %) ⚠️", meppNow:"MEPP 현재까지 적립 연금 ($/년)", oasMax:"OAS 최대 월액 ($)",
-      advNote:"소득 상한과 1년당 최대 연금은 2026년 10월 회사 연금 안내문(TMOS) 기준입니다. 상한은 은퇴 연도에 따라 2026년 $94,000, 2027년 $96,000, 2028년 $98,000, 2029년 $100,000, 2030년 이후 위 값이 모든 근속에 적용됩니다. 1년당 최대 연금은 2027년 1월부터 $1,870입니다(그 전 은퇴는 $1,715).<br>⚠️ 표시 값은 확인되지 않았습니다. 물가연동은 2028년·2030년 1월에 1.5%씩 조건부(적립비율 140% 초과 시)라서 기본 0%로 두었습니다. MEPP 기여율과 적립률은 본인 MEPP 연간 명세서로 맞춰 주세요.",
+      advNote:"소득 상한과 1년당 최대 연금은 2026년 10월 회사 연금 안내문 기준입니다. 상한은 은퇴 연도에 따라 2026년 $94,000, 2027년 $96,000, 2028년 $98,000, 2029년 $100,000, 2030년 이후 위 값이 모든 근속에 적용됩니다. 1년당 최대 연금은 2027년 1월부터 $1,870입니다(그 전 은퇴는 $1,715).<br>⚠️ 표시 값은 확인되지 않았습니다. 물가연동은 2028년·2030년 1월에 1.5%씩 조건부(적립비율 140% 초과 시)라서 기본 0%로 두었습니다. MEPP 기여율과 적립률은 본인 MEPP 연간 명세서로 맞춰 주세요.",
       dates:"주요 날짜", method:"계산 방식",
       infoH:"폰에 설치하기 · 개인정보", iosH:"아이폰 (Safari)", andH:"안드로이드 (Chrome)", privH:"내 데이터는 어디에 저장되나요?",
       iosSteps:"<li>이 앱 링크를 <b>Safari</b>로 엽니다. (카톡·문자 안에서 열렸다면 오른쪽 아래 메뉴에서 \"Safari로 열기\")</li><li>아래쪽 가운데 <b>공유 버튼</b>(네모에 위 화살표)을 누릅니다.</li><li>목록을 내려서 <b>\"홈 화면에 추가\"</b>를 누릅니다.</li><li>이름을 \"연금 계산기\"로 바꾸고 오른쪽 위 <b>\"추가\"</b>를 누르면 홈 화면에 아이콘이 생깁니다.</li>",
@@ -296,7 +296,7 @@ details .grid2{margin-top:12px}
       cMEPP:"MEPP는 공제액이 본인 기여금이라 총급여 − 이익배분금으로 연봉을 계산합니다.",
       updH:"앱 업데이트", updNow:"지금 버전", updBtn:"업데이트 확인", uChk:"새 버전 확인 중…", uLatest:v=>`최신 버전입니다 (${v}).`, uNew:v=>`새 버전 ${v}이 있습니다. 버튼을 누르면 바로 바뀝니다. 입력값은 그대로 남습니다.`, uGo:"지금 업데이트", uFail:"확인하지 못했습니다. 인터넷 연결을 확인해 주세요.", uRel:"업데이트하는 중…",
       sApplied:"최근 연봉에 넣었습니다.", sAppliedTo:m=>`적용 완료! 최근 연봉 칸에 <b>${m}</b>을 넣었습니다. 아래 결과도 새로 계산됐습니다.`, days:d=>`${d}일`,
-      disc:"공개 자료를 바탕으로 한 <b>추정치</b>입니다. 세금 공제 전 금액이며, 실제 연금은 에어캐나다 Pension Centre 공식 명세서와 퇴직 견적이 기준입니다. 출처: " + SRC,
+      disc:"<b>개인이 만든 참고용 추정 계산기이며, 회사나 노조의 공식 도구가 아닙니다.</b> 실제 연금액은 회사 연금 포털(Alight)에서 확인하세요.<br>공개 자료를 바탕으로 한 세금 공제 전 추정치입니다. 출처: " + SRC,
       // dynamic
       need:"생년월일과 입사일을 입력해 주세요.", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
       kd80:"80점 도달", kd60:"60세", kd65:"65세", past:"지남",
@@ -314,7 +314,7 @@ details .grid2{margin-top:12px}
       dPenNom:"회사연금 (그때 돈, 월)", dCpp:a=>`CPP ${a}세 시작 (오늘 돈, 월)`, dOas:a=>`OAS ${a}세 시작 (오늘 돈, 월)`, dClaw:"OAS 환수 (클로백, 월)",
       dErode:"65세까지 물가로 줄어드는 회사연금 가치",
       mDB:`<b>DB 플랜:</b> 연금 = 근속(최대 35년) × [평균소득 중 YMPE 이하 × 1.75% + 초과분 × 2.0%]. 평균소득은 은퇴 전 3년 연봉 평균(최고 36개월 근사)이고, 은퇴 연도의 소득 상한($94,000~$102,000)과 근속 1년당 최대 연금($1,870)을 넘지 않게 계산합니다. 55세 이상 + 80점이면 감액이 없고, 그 외에는 65세까지 1년마다 6% 복리 감액(60세 26.6%)입니다. "Higher to 65"·배우자(J&S 60%) 옵션은 반영하지 않았습니다(J&S 50% 기본형 기준).<br><br><b>CPP:</b> 65세 전 월 0.6% 감액, 65세 후 월 0.7% 증액. <b>OAS:</b> 40년 거주 기준 전액, 연기 시 월 0.6% 증액, 연 소득 $95,323 초과분의 15% 환수.<br><br>은퇴 시점 금액은 물가상승률로 나눠 <b>오늘 돈 가치</b>로 바꿨습니다. 회사연금 물가연동은 2028년·2030년 1.5%씩 조건부라서 기본 0%로 두었고, 그래서 65세 이후 실질 가치가 조금 줄어듭니다.`,
-      mMEPP:`<b>IAM MEPP:</b> 매년 낸 기여금(회사+본인) × 적립률만큼 평생 연금이 쌓입니다. 2027년 이후 은퇴 시 63세 이상, 또는 60세 이상 + 25년 근속이면 감액이 없고, 그 외에는 65세 전 월 0.5% 감액입니다. 기여율과 적립률은 공개 자료에서 확인되지 않아 고급 설정에서 명세서 값으로 바꿔야 정확합니다.<br><br><b>CPP·OAS</b> 규칙은 DB와 같습니다. 금액은 오늘 돈 가치입니다.`
+      mMEPP:`<b>MEPP:</b> 매년 낸 기여금(회사+본인) × 적립률만큼 평생 연금이 쌓입니다. 2027년 이후 은퇴 시 63세 이상, 또는 60세 이상 + 25년 근속이면 감액이 없고, 그 외에는 65세 전 월 0.5% 감액입니다. 기여율과 적립률은 공개 자료에서 확인되지 않아 고급 설정에서 명세서 값으로 바꿔야 정확합니다.<br><br><b>CPP·OAS</b> 규칙은 DB와 같습니다. 금액은 오늘 돈 가치입니다.`
     },
     en: {
       title:"My Pension Calculator",
@@ -327,7 +327,7 @@ details .grid2{margin-top:12px}
       adv:"Advanced settings (includes unconfirmed values)", ympeG:"YMPE yearly growth (%)", cap:"Earnings cap from 2030 ($)", maxPer:"Max pension per year of service ($)",
       ded:"Service to deduct (months, e.g. unpaid leave)", infl:"Inflation (%)", idx:"Pension indexing after retirement (%/yr) ⚠️",
       meppRate:"MEPP accrual (% of each $1 contributed) ⚠️", meppC:"MEPP total contribution (% of pay) ⚠️", meppNow:"MEPP pension accrued so far ($/yr)", oasMax:"OAS maximum monthly ($)",
-      advNote:"The earnings cap and the per-year maximum come from Air Canada's October 2026 pension notice (TMOS). The cap depends on your retirement year: $94,000 in 2026, $96,000 in 2027, $98,000 in 2028, $100,000 in 2029, and the value above from 2030. It applies to all service. The maximum pension per year of service is $1,870 from January 2027 ($1,715 before).<br>⚠️ Values marked this way are not confirmed. Indexing is conditional (1.5% in January 2028 and 2030, only if the solvency ratio exceeds 140%), so it defaults to 0%. Set the MEPP rates from your annual MEPP statement.",
+      advNote:"The earnings cap and the per-year maximum come from the October 2026 company pension notice. The cap depends on your retirement year: $94,000 in 2026, $96,000 in 2027, $98,000 in 2028, $100,000 in 2029, and the value above from 2030. It applies to all service. The maximum pension per year of service is $1,870 from January 2027 ($1,715 before).<br>⚠️ Values marked this way are not confirmed. Indexing is conditional (1.5% in January 2028 and 2030, only if the solvency ratio exceeds 140%), so it defaults to 0%. Set the MEPP rates from your annual MEPP statement.",
       dates:"Key dates", method:"How it's calculated",
       infoH:"Install on your phone · Privacy", iosH:"iPhone (Safari)", andH:"Android (Chrome)", privH:"Where is my data stored?",
       iosSteps:"<li>Open this app's link in <b>Safari</b>. (If it opened inside a messaging app, use its menu to \"Open in Safari\".)</li><li>Tap the <b>Share button</b> (square with an up arrow) at the bottom.</li><li>Scroll down and tap <b>\"Add to Home Screen\"</b>.</li><li>Rename it \"Pension\" if you like, then tap <b>\"Add\"</b> at the top right. The icon appears on your home screen.</li>",
@@ -346,7 +346,7 @@ details .grid2{margin-top:12px}
       cMEPP:"For MEPP the deduction is your own contribution, so pay is based on gross minus profit sharing.",
       updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…",
       sApplied:"Added to recent annual pay.", sAppliedTo:m=>`Done! <b>${m}</b> is now your recent annual pay, and the results below are updated.`, days:d=>`${d} days`,
-      disc:"This is an <b>estimate</b> based on public information, before tax. Your official Air Canada pension statement and retirement quote are what count. Sources: " + SRC,
+      disc:"<b>This is a personal, unofficial estimator. It is not a tool of the company or the union.</b> Check your actual pension on the company pension portal (Alight).<br>Estimates are based on public information, before tax. Sources: " + SRC,
       need:"Enter your date of birth and hire date.", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
       kd80:"80 points", kd60:"Age 60", kd65:"Age 65", past:"passed",
       c80:"Retire at 80 points", c6025:"Age 60 + 25 years", c25:"25 years of service (after 60)", c60:"Retire at 60", c65:"Retire at 65", cAge:a=>`Retire at ${a}`, nowSfx:" (if you retire now)",
@@ -363,7 +363,7 @@ details .grid2{margin-top:12px}
       dPenNom:"Company pension (future $, monthly)", dCpp:a=>`CPP from ${a} (today's $, monthly)`, dOas:a=>`OAS from ${a} (today's $, monthly)`, dClaw:"OAS clawback (monthly)",
       dErode:"Pension value lost to inflation by 65",
       mDB:`<b>DB plan:</b> pension = service (max 35 years) × [1.75% of average pay up to the YMPE + 2.0% above it]. Average pay is the average of your last 3 years (close to the best 36 months), limited by the earnings cap for your retirement year ($94,000 to $102,000) and the $1,870 maximum per year of service. At 55 or older with 80 points there is no reduction; otherwise it drops about 6% a year (compounded) before 65, so 26.6% at 60. The "Higher to 65" and J&S 60% spouse options are not included (based on the standard J&S 50% form).<br><br><b>CPP:</b> −0.6% per month before 65, +0.7% per month after. <b>OAS:</b> full amount with 40 years in Canada, +0.6% per month if delayed, 15% clawback on income over $95,323.<br><br>Amounts at retirement are divided by inflation to show <b>today's dollars</b>. Pension indexing is only conditional (1.5% in 2028 and 2030), so it defaults to 0% and the pension's real value shrinks a little after retirement.`,
-      mMEPP:`<b>IAM MEPP:</b> each year's contributions (company + you) × the accrual rate add to a lifetime pension. For retirements from 2027, there is no reduction at 63+, or at 60+ with 25 years of service; otherwise −0.5% per month before 65. Contribution and accrual rates aren't public, so set them from your statement in Advanced settings.<br><br><b>CPP and OAS</b> work the same as for DB. Amounts are in today's dollars.`
+      mMEPP:`<b>MEPP:</b> each year's contributions (company + you) × the accrual rate add to a lifetime pension. For retirements from 2027, there is no reduction at 63+, or at 60+ with 25 years of service; otherwise −0.5% per month before 65. Contribution and accrual rates aren't public, so set them from your statement in Advanced settings.<br><br><b>CPP and OAS</b> work the same as for DB. Amounts are in today's dollars.`
     }
   };
   const T = k => TX[lang][k];
@@ -676,7 +676,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.4";
+  const APP_VERSION = "1.6.5";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

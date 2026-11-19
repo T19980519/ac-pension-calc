@@ -42,10 +42,15 @@ header p{margin:4px 0 0;color:var(--muted);font-size:13px}
 .tag{font-family:var(--f-display);font-weight:600;font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:var(--accent)}
 .panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:16px;display:flex;flex-direction:column;gap:14px}
 .panel h2{font-family:var(--f-display);font-size:19px;font-weight:600;margin:0}
-.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.grid2{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:12px;align-items:end}
 .field{display:flex;flex-direction:column;gap:4px;min-width:0}
 .field label{font-size:13px;color:var(--muted);font-weight:500}
 .field input,.field select{font:inherit;font-size:16px;color:var(--ink);background:var(--bg);border:1px solid var(--line);border-radius:10px;padding:10px 12px;width:100%;min-width:0}
+.field input,.field select{height:46px;-webkit-appearance:none;appearance:none;display:block;max-width:100%;margin:0}
+.field input[type="date"]{text-align:left;line-height:24px}
+.field input[type="date"]::-webkit-date-and-time-value{text-align:left;margin:0}
+.field input[type="date"]::-webkit-calendar-picker-indicator{margin:0}
+.field select{background-image:linear-gradient(45deg,transparent 50%,var(--muted) 50%),linear-gradient(135deg,var(--muted) 50%,transparent 50%);background-position:calc(100% - 18px) 50%,calc(100% - 13px) 50%;background-size:5px 5px;background-repeat:no-repeat;padding-right:32px}
 .field input:focus,.field select:focus,.seg button:focus-visible,summary:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
 .hint{font-size:12px;color:var(--muted)}
 .seg{display:grid;grid-template-columns:1fr 1fr;background:var(--bg);border:1px solid var(--line);border-radius:12px;padding:4px;gap:4px}
@@ -117,7 +122,7 @@ details .grid2{margin-top:12px}
   <header>
     <div class="tag">Air Canada · IAM&amp;AW</div>
     <div class="titlerow">
-      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.4.1</span></div>
+      <div class="tline"><h1 data-i="title">나의 연금 계산기</h1><span class="ver" title="2026-11-19">v1.4.2</span></div>
       <div class="lang" role="group" aria-label="Language">
         <button type="button" id="langKO" aria-pressed="true" lang="ko">KOR</button>
         <button type="button" id="langEN" aria-pressed="false" lang="en">ENG</button>
@@ -224,7 +229,7 @@ details .grid2{margin-top:12px}
   </section>
 
   <div class="disclaimer" data-i="disc"></div>
-  <p class="note" style="text-align:center;margin:0">v1.4.1 · 2026-11-19</p>
+  <p class="note" style="text-align:center;margin:0">v1.4.2 · 2026-11-19</p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>

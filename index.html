@@ -253,7 +253,7 @@ details .grid2{margin-top:12px}
         <div class="field"><label for="infl" data-i="infl">물가상승률 (%)</label><input id="infl" type="number" step="0.1" value="2"></div>
         <div class="field"><label for="idx" data-i="idx">은퇴 후 회사연금 물가연동 (%/년) ⚠️</label><input id="idx" type="number" step="0.1" value="0"></div>
         <div class="field"><label for="meppRate" data-i="meppRate">MEPP 적립률 (기여금 $1당 연금 %) ⚠️</label><input id="meppRate" type="number" step="0.005" value="1.265"></div>
-        <div class="field"><label for="meppE" data-i="meppE">MEPP 본인 기여율 (%) — 회사도 같은 비율로 계산</label><input id="meppE" type="number" inputmode="decimal" step="0.05" value="5.25"></div>
+        <div class="field"><label for="meppE" data-i="meppE">MEPP 본인 기여율 (%) — 회사도 같은 비율로 계산</label><input id="meppE" type="number" inputmode="decimal" step="0.05" value="6"></div>
         <div class="field"><label for="meppNow" data-i="meppNow">MEPP 현재까지 적립 연금 ($/월)</label><input id="meppNow" type="number" step="10" value="0"></div>
         <div class="field"><label for="oasMax" data-i="oasMax">OAS 최대 월액 ($)</label><input id="oasMax" type="number" step="0.01" value="762.50"></div>
       </div>
@@ -276,12 +276,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.31</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.32</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.31</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.32</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -325,7 +325,7 @@ details .grid2{margin-top:12px}
       cOk:p=>`두 화면 금액 차이 ${p}%: 서로 맞습니다.`, cBad:p=>`두 화면 금액 차이 ${p}%: 숫자를 한 번 확인해 주세요. (기여율이 다르거나 공제 안 되는 수당이 있을 수 있습니다)`,
       cMEPP:"MEPP는 공제액이 본인 기여금이라 총급여 − 이익배분금으로 연봉을 계산합니다.",
       updH:"앱 업데이트", updNow:"지금 버전", updBtn:"업데이트 확인", uChk:"새 버전 확인 중…", uLatest:v=>`최신 버전입니다 (${v}).`, uNew:v=>`새 버전 ${v}이 있습니다. 버튼을 누르면 바로 바뀝니다. 입력값은 그대로 남습니다.`, uGo:"지금 업데이트", uFail:"확인하지 못했습니다. 인터넷 연결을 확인해 주세요.", uRel:"업데이트하는 중…",
-      sApplied:"최근 연봉에 넣었습니다.", sAppliedTo:m=>`적용 완료! 최근 연봉 칸에 <b>${m}</b>을 넣었습니다. 아래 결과도 새로 계산됐습니다.`, days:d=>`${d}일`,
+      sApplied:"최근 연봉에 넣었습니다.", sAppliedTo:m=>`적용 완료! 최근 연봉 칸에 <b>${m}</b>을 넣었습니다. 아래 결과도 새로 계산됐습니다.`, days:d=>`${d}일`, sRateTo:r=>`MEPP 본인 기여율도 명세서 기준 <b>${r}%</b>로 바꿨습니다.`,
       disc:"개인이 만든 참고용 추정 계산기이며, 회사나 노조의 공식 도구가 아닙니다. 실제 연금액은 회사 연금 포털(Alight)에서 확인하세요.",
       // dynamic
       need:"생년월일과 입사일을 입력해 주세요.", needSal:"<b>최근 연봉</b>을 넣거나, 아래 급여 명세서 이미지를 올리면 예상 연금이 여기에 나옵니다.", phSal:"예) 75,000", planOk:"입사일 기준으로 맞는 플랜입니다.", planDiff:"입사일과 다른 플랜을 선택하셨습니다.",
@@ -377,7 +377,7 @@ details .grid2{margin-top:12px}
       cOk:p=>`The two screens differ by ${p}%: they match.`, cBad:p=>`The two screens differ by ${p}%: please check the numbers. (The rate may differ, or some pay isn't pensionable.)`,
       cMEPP:"For MEPP the deduction is your own contribution, so pay is based on gross minus profit sharing.",
       updH:"App updates", updNow:"Current version", updBtn:"Check for updates", uChk:"Checking for a new version…", uLatest:v=>`You have the latest version (${v}).`, uNew:v=>`Version ${v} is available. Tap the button to update now. Your inputs stay.`, uGo:"Update now", uFail:"Couldn't check. Please check your internet connection.", uRel:"Updating…",
-      sApplied:"Added to recent annual pay.", sAppliedTo:m=>`Done! <b>${m}</b> is now your recent annual pay, and the results below are updated.`, days:d=>`${d} days`,
+      sApplied:"Added to recent annual pay.", sAppliedTo:m=>`Done! <b>${m}</b> is now your recent annual pay, and the results below are updated.`, days:d=>`${d} days`, sRateTo:r=>`Your MEPP contribution rate is also set to <b>${r}%</b> from the stub.`,
       disc:"This is a personal, unofficial estimator, not a company or union tool. Check your actual pension on the company pension portal (Alight).",
       need:"Enter your date of birth and hire date.", needSal:"Enter your <b>recent annual pay</b>, or upload pay stub screenshots below, to see your estimated pension here.", phSal:"e.g. 75,000", planOk:"This plan matches your hire date.", planDiff:"This plan doesn't match your hire date.",
       kd80:"80 points", kd60:"Age 60", kd65:"Age 65", past:"passed",
@@ -642,12 +642,12 @@ details .grid2{margin-top:12px}
   // Pay stub figures are never saved: they stay only until the page is closed. Remove anything an older version saved.
   try { localStorage.removeItem(STUB_KEY); } catch (e) {}
   if (!$("sAsOf").value) { const n = new Date(); $("sAsOf").value = `${n.getFullYear()}-${String(n.getMonth()+1).padStart(2,"0")}-${String(n.getDate()).padStart(2,"0")}`; }
-  let stubAnnual = 0, ocrMsg = null;
+  let stubAnnual = 0, stubRate = 0, appliedRate = 0, ocrMsg = null;
 
   function stubCalc(){
     const asOf = parseD($("sAsOf").value);
     const pen = num("sPen"), rate = num("sRate")/100, gross = num("sGross"), ps = num("sPS");
-    const rows = []; stubAnnual = 0; let check = "", cls = "hint";
+    const rows = []; stubAnnual = 0; stubRate = 0; let check = "", cls = "hint";
     if (asOf) {
       const jan1 = Date.UTC(asOf.getUTCFullYear(), 0, 1);
       const days = Math.round((asOf - jan1)/864e5) + 1;
@@ -656,7 +656,7 @@ details .grid2{margin-top:12px}
       let ytd = 0;
       if (plan === "DB" && pen > 0 && rate > 0) { ytd = pen / rate; rows.push([T("rPenYTD"), money(ytd)]); }
       if (net > 0) rows.push([T("rGrossPS"), money(net)]);
-      if (plan === "MEPP") { ytd = net; if (net > 0 && pen > 0) rows.push([T("rContrib"), (pen/net*100).toFixed(2) + "%"]); check = T("cMEPP"); }
+      if (plan === "MEPP") { ytd = net; if (net > 0 && pen > 0) { stubRate = pen/net*100; rows.push([T("rContrib"), stubRate.toFixed(2) + "%"]); } check = T("cMEPP"); }
       else if (ytd > 0 && net > 0) { const d = Math.abs(ytd - net)/net*100; check = d <= 3 ? T("cOk")(d.toFixed(1)) : T("cBad")(d.toFixed(1)); cls = d <= 3 ? "hint good" : "hint bad"; }
       else if (!ytd && net > 0) ytd = net;
       if (ytd > 0 && days > 0) {
@@ -672,8 +672,10 @@ details .grid2{margin-top:12px}
   STUB_IDS.forEach(k => $(k).addEventListener("input", () => { stubCalc(); clearTimeout(applyT); applyT = setTimeout(applyStub, 700); }));
   function applyStub(){
     if (!(stubAnnual > 0)) return;
-    appliedAmt = Math.round(stubAnnual);
-    $("salary").value = appliedAmt; run();
+    appliedAmt = Math.round(stubAnnual); appliedRate = 0;
+    // MEPP: the stub shows the real contribution rate (deduction / gross without profit sharing); use it
+    if (plan === "MEPP" && stubRate >= 3 && stubRate <= 10) { appliedRate = Math.round(stubRate*20)/20; $("meppE").value = appliedRate; }
+    $("salary").value = appliedAmt; run(); save();
     showApplied(); $("appliedMsg").hidden = false;
     const s = $("salary"); s.classList.remove("flash"); void s.offsetWidth; s.classList.add("flash");
   }
@@ -682,7 +684,7 @@ details .grid2{margin-top:12px}
   // Rebuilt on every language switch so the message always matches KOR/ENG.
   function showApplied(){
     if (!appliedAmt) return;
-    $("appliedMsg").innerHTML = `<span class="chk" aria-hidden="true">✓</span><span>${T("sAppliedTo")(money(appliedAmt))}</span>`;
+    $("appliedMsg").innerHTML = `<span class="chk" aria-hidden="true">✓</span><span>${T("sAppliedTo")(money(appliedAmt))}${appliedRate ? " " + T("sRateTo")(appliedRate) : ""}</span>`;
   }
   function showOcr(){ $("ocrStatus").textContent = ocrMsg ? ocrMsg() : ""; }
 
@@ -792,7 +794,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.31";
+  const APP_VERSION = "1.6.32";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

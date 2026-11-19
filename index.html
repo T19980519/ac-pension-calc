@@ -276,12 +276,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.23</b> · 2026-11-19</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.24</b> · 2026-11-19</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.23</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.24</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -291,7 +291,7 @@ details .grid2{margin-top:12px}
   const $ = id => document.getElementById(id);
   const ids = ["birth","hire","salary","raise","cpp65","cppStart","resid","oasStart","custom","retDate","ympe","ympeG","cap","maxPer","ded","infl","idx","meppRate","meppC","meppNow","oasMax"];
   const KEY = "ac-pension-calc-v1";
-  let plan = "DB", planTouched = false, hireSet = false, lang = "ko";
+  let plan = "DB", planTouched = false, hireSet = false, lang = "en";
 
   const TX = {
     ko: {
@@ -343,8 +343,8 @@ details .grid2{margin-top:12px}
       dMNow:"현재 적립 연금", dMFut:r=>`앞으로 기여금 × ${r}%`,
       dPenNom:"회사연금 (그때 돈, 월)", dCpp:a=>`CPP ${a}세 시작 (오늘 돈, 월)`, dOas:a=>`OAS ${a}세 시작 (오늘 돈, 월)`, dClaw:"OAS 환수 (클로백, 월)",
       dErode:"65세까지 물가로 줄어드는 회사연금 가치",
-      mDB:`<b>DB 플랜:</b> 연금 = 근속(최대 35년) × [평균소득 중 YMPE 이하 × 1.75% + 초과분 × 2.0%]. 평균소득은 은퇴 전 3년 연봉 평균(최고 36개월 근사)이고, 은퇴 연도의 소득 상한($94,000~$102,000)과 근속 1년당 최대 연금($1,870)을 넘지 않게 계산합니다. 55세 이상 + 80점이면 감액이 없고, 그 외에는 65세까지 1년마다 6% 복리 감액(60세 26.6%)입니다. "Higher to 65"·배우자(J&S 60%) 옵션은 반영하지 않았습니다(J&S 50% 기본형 기준).<br><br><b>CPP:</b> 65세 전 월 0.6% 감액, 65세 후 월 0.7% 증액. <b>OAS:</b> 40년 거주 기준 전액, 연기 시 월 0.6% 증액, 연 소득 $95,323 초과분의 15% 환수.<br><br>은퇴 시점 금액은 물가상승률로 나눠 <b>오늘 돈 가치</b>로 바꿨습니다. 회사연금 물가연동은 2028년·2030년 1.5%씩 조건부라서 기본 0%로 두었고, 그래서 65세 이후 실질 가치가 조금 줄어듭니다.`,
-      mMEPP:`<b>MEPP:</b> 매년 낸 기여금(회사+본인) × 적립률만큼 평생 연금이 쌓입니다. 2027년 이후 은퇴 시 63세 이상, 또는 60세 이상 + 25년 근속이면 감액이 없고, 그 외에는 65세 전 월 0.5% 감액입니다. 기여율과 적립률은 공개 자료에서 확인되지 않아 고급 설정에서 명세서 값으로 바꿔야 정확합니다.<br><br><b>CPP·OAS</b> 규칙은 DB와 같습니다. 금액은 오늘 돈 가치입니다.`
+      mDB:`<b>DB</b> · 근속연수(최대 35년) × 평균연봉 × 약 1.75~2.0%<br>· 평균연봉 = 은퇴 전 3년 평균, 소득 상한과 1년당 최대 연금 적용<br>· 55세 이상 + 80점(나이+근속)이면 감액 없음, 아니면 65세 전 1년마다 약 6% 감액<br><br><b>CPP</b> · 65세에 받는 금액 기준, 일찍 받으면 월 0.6% 감액, 늦추면 월 0.7% 증액<br><b>OAS</b> · 40년 거주 시 전액, 늦추면 월 0.6% 증액, 연 소득 $95,323 초과분의 15% 환수<br><br>모든 금액은 세전 월액이고, 물가상승을 뺀 <b>오늘 돈 가치</b>입니다.`,
+      mMEPP:`<b>MEPP</b> · 매년 낸 기여금(회사+본인) × 적립률만큼 평생 연금이 쌓임<br>· 63세 이상, 또는 60세 이상 + 25년 근속이면 감액 없음, 아니면 65세 전 월 0.5% 감액<br>· 기여율·적립률은 본인 연간 명세서 값으로 고급 설정에서 맞추면 더 정확<br><br><b>CPP</b> · 65세에 받는 금액 기준, 일찍 받으면 월 0.6% 감액, 늦추면 월 0.7% 증액<br><b>OAS</b> · 40년 거주 시 전액, 늦추면 월 0.6% 증액, 연 소득 $95,323 초과분의 15% 환수<br><br>모든 금액은 세전 월액이고, 물가상승을 뺀 <b>오늘 돈 가치</b>입니다.`
     },
     en: {
       title:"My Pension Calculator",
@@ -394,8 +394,8 @@ details .grid2{margin-top:12px}
       dMNow:"Pension accrued so far", dMFut:r=>`Future contributions × ${r}%`,
       dPenNom:"Company pension (future $, monthly)", dCpp:a=>`CPP from ${a} (today's $, monthly)`, dOas:a=>`OAS from ${a} (today's $, monthly)`, dClaw:"OAS clawback (monthly)",
       dErode:"Pension value lost to inflation by 65",
-      mDB:`<b>DB plan:</b> pension = service (max 35 years) × [1.75% of average pay up to the YMPE + 2.0% above it]. Average pay is the average of your last 3 years (close to the best 36 months), limited by the earnings cap for your retirement year ($94,000 to $102,000) and the $1,870 maximum per year of service. At 55 or older with 80 points there is no reduction; otherwise it drops about 6% a year (compounded) before 65, so 26.6% at 60. The "Higher to 65" and J&S 60% spouse options are not included (based on the standard J&S 50% form).<br><br><b>CPP:</b> −0.6% per month before 65, +0.7% per month after. <b>OAS:</b> full amount with 40 years in Canada, +0.6% per month if delayed, 15% clawback on income over $95,323.<br><br>Amounts at retirement are divided by inflation to show <b>today's dollars</b>. Pension indexing is only conditional (1.5% in 2028 and 2030), so it defaults to 0% and the pension's real value shrinks a little after retirement.`,
-      mMEPP:`<b>MEPP:</b> each year's contributions (company + you) × the accrual rate add to a lifetime pension. For retirements from 2027, there is no reduction at 63+, or at 60+ with 25 years of service; otherwise −0.5% per month before 65. Contribution and accrual rates aren't public, so set them from your statement in Advanced settings.<br><br><b>CPP and OAS</b> work the same as for DB. Amounts are in today's dollars.`
+      mDB:`<b>DB</b> · years of service (max 35) × average pay × about 1.75–2.0%<br>· Average pay = last 3 years, limited by the earnings cap and the yearly maximum<br>· No reduction at 55+ with 80 points (age + service); otherwise about 6% less per year before 65<br><br><b>CPP</b> · based on your amount at 65; −0.6%/month if earlier, +0.7%/month if later<br><b>OAS</b> · full with 40 years in Canada; +0.6%/month if delayed; 15% clawback on income over $95,323<br><br>All amounts are monthly, before tax, in <b>today's dollars</b>.`,
+      mMEPP:`<b>MEPP</b> · each year's contributions (company + you) × the accrual rate build a lifetime pension<br>· No reduction at 63+, or 60+ with 25 years; otherwise −0.5% per month before 65<br>· Set the rates from your annual statement in Advanced settings for a closer number<br><br><b>CPP</b> · based on your amount at 65; −0.6%/month if earlier, +0.7%/month if later<br><b>OAS</b> · full with 40 years in Canada; +0.6%/month if delayed; 15% clawback on income over $95,323<br><br>All amounts are monthly, before tax, in <b>today's dollars</b>.`
     }
   };
   const T = k => TX[lang][k];
@@ -451,7 +451,7 @@ details .grid2{margin-top:12px}
       hireSet = saved.hireSet !== undefined ? !!saved.hireSet : (saved.hire && saved.hire !== $("hire").value);
       if (!hireSet && !planTouched) plan = "DB";
       if (saved.birthSet) $("birthHint").hidden = true;
-      if (saved.lang === "en") lang = "en";
+      if (saved.lang) lang = saved.lang === "ko" ? "ko" : "en";
     }
   } catch (e) {}
 
@@ -781,7 +781,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.23";
+  const APP_VERSION = "1.6.24";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

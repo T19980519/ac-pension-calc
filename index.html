@@ -110,7 +110,7 @@ details .grid2{margin-top:12px}
 .stub-in .grid2{margin-top:0}
 .upload{display:flex;align-items:center;justify-content:center;gap:8px;border:1px solid var(--accent);color:var(--accent);background:var(--surface);border-radius:10px;padding:12px;font-weight:500;cursor:pointer;text-align:center}
 .upload input{position:absolute;width:1px;height:1px;opacity:0}
-.upload svg{flex:none;width:22px;height:22px}
+.stub .sum-in svg{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
 .upload:focus-within{outline:2px solid var(--accent);outline-offset:1px}
 /* working panel (same look and motion as the realtor app's "AI draft" screen) */
 .working{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--surface),var(--soft));box-shadow:0 14px 30px -22px color-mix(in srgb,var(--accent) 80%,transparent)}
@@ -213,10 +213,10 @@ details .grid2{margin-top:12px}
     </div>
     <div class="hint" data-i="hourlyHint">시급을 넣으면 연봉 칸 대신 시급을 쓰고, 매년 4월 1일에 위 인상률만큼 오르는 것으로 계산합니다. (시급 × 2,080시간 × (1 + 추가%))</div>
     <details class="stub" id="stubBox">
-      <summary data-i="stubSum">급여 명세서 이미지로 연봉 채우기</summary>
+      <summary><span class="sum-in"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span data-i="stubSum">급여 명세서 이미지로 연봉 채우기</span></span></summary>
       <div class="stub-in">
         <p class="hint" data-i="stubHelp"></p>
-        <label class="upload" for="stubFiles"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 16V4"/><path d="M7 9l5-5 5 5"/><path d="M4 16v3a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-3"/></svg><span data-i="stubPick">명세서 화면 선택</span><input id="stubFiles" type="file" accept="image/*" multiple></label>
+        <label class="upload" for="stubFiles"><span data-i="stubPick">명세서 화면 선택</span><input id="stubFiles" type="file" accept="image/*" multiple></label>
         <div class="working" id="work" hidden><div class="working-head"><span class="spinner" aria-hidden="true"></span><div><b id="wTitle"></b><div class="hint" id="wSub"></div></div></div><div class="working-bar" aria-hidden="true"><div></div></div><ol class="working-steps" id="wSteps"></ol></div>
         <div class="hint" id="ocrStatus" aria-live="polite"></div>
         <div class="grid2">
@@ -282,12 +282,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.35</b> · 2026-11-21</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.36</b> · 2026-11-21</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.35</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.36</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -804,7 +804,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.35";
+  const APP_VERSION = "1.6.36";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

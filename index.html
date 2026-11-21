@@ -113,7 +113,7 @@ details .grid2{margin-top:12px}
 .stub .sum-in svg{width:22px;height:22px;vertical-align:-5px;margin-right:6px}
 .upload:focus-within{outline:2px solid var(--accent);outline-offset:1px}
 /* working panel (same look and motion as the realtor app's "AI draft" screen) */
-.working{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--surface),var(--soft));box-shadow:0 14px 30px -22px color-mix(in srgb,var(--accent) 80%,transparent)}
+.working{display:flex;flex-direction:column;gap:12px;padding:16px;border-radius:14px;border:1px solid color-mix(in srgb,var(--accent) 45%,var(--line));background:linear-gradient(180deg,var(--surface),var(--soft))}
 .working[hidden]{display:none}
 .working:not([hidden]):not(.fin) + #ocrStatus{display:none}
 .working-head{display:flex;gap:12px;align-items:center}
@@ -282,12 +282,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.37</b> · 2026-11-21</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.38</b> · 2026-11-21</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.37</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.38</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -804,7 +804,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.37";
+  const APP_VERSION = "1.6.38";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

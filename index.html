@@ -21,18 +21,18 @@
 /* Layout: one narrow column like a ramp checklist card; inputs on top, scenario "gate cards" below. */
 :root{
   --bg:#EEF1F4; --surface:#FFFFFF; --ink:#16212E; --muted:#5B6878; --line:#D3DAE2;
-  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#FDECEC;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#FDECEC; --sky:#E3F2FD;
   --good:#1F7A4D; --good-bg:#E3F4EA; --warn:#9A5B00; --warn-bg:#FFF3D6; --bad:#B42318; --bad-bg:#FDE7E5;
   --f-display:"Barlow Semi Condensed","Noto Sans KR",system-ui,sans-serif;
   --f-body:"Noto Sans KR",system-ui,-apple-system,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
 }
 @media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
   --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
-  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719; --sky:#16293A;
   --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}}
 :root[data-theme="dark"]{
   --bg:#12171D; --surface:#1B222B; --ink:#E7ECF2; --muted:#9AA7B6; --line:#2C3642;
-  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719;
+  --accent:#D2232A; --accent-ink:#FFFFFF; --soft:#2A1719; --sky:#16293A;
   --good:#5BD79A; --good-bg:#16302A; --warn:#F2B84B; --warn-bg:#33290F; --bad:#FF8A80; --bad-bg:#3A1C1A; color-scheme:dark}
 *{box-sizing:border-box}
 body{background:var(--bg);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.5;
@@ -104,7 +104,7 @@ details .grid2{margin-top:12px}
 .lang button{font:inherit;font-family:var(--f-display);font-weight:600;font-size:13px;letter-spacing:.06em;border:0;border-radius:99px;padding:6px 11px;background:transparent;color:var(--muted);cursor:pointer}
 .lang button[aria-pressed="true"]{background:var(--ink);color:var(--bg)}
 .lang button:focus-visible{outline:2px solid var(--accent);outline-offset:1px}
-.stub{border:1px dashed var(--accent);border-radius:12px;padding:12px 14px;background:var(--soft)}
+.stub{border:1px dashed var(--accent);border-radius:12px;padding:12px 14px;background:var(--sky)}
 .stub summary{color:var(--accent);font-weight:700}
 .stub-in{display:flex;flex-direction:column;gap:12px;margin-top:10px}
 .stub-in .grid2{margin-top:0}
@@ -282,12 +282,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.36</b> · 2026-11-21</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.37</b> · 2026-11-21</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.36</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.37</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -804,7 +804,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.36";
+  const APP_VERSION = "1.6.37";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){

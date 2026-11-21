@@ -204,7 +204,7 @@ details .grid2{margin-top:12px}
     </div>
     <div class="grid2">
       <div class="field"><label for="salary" data-i="salary">최근 연봉 (CAD, 오버타임 포함)</label><input id="salary" type="number" inputmode="decimal" step="500" data-ph="phSal" placeholder="예) 75,000"></div>
-      <div class="field"><label for="raise" data-i="raise">매년 인상률 (%)</label><input id="raise" type="number" inputmode="decimal" step="0.1" value="2.5"></div>
+      <div class="field"><label for="raise" data-i="raise">매년 인상률 (%)</label><input id="raise" type="number" inputmode="decimal" step="0.1" value="3.0"></div>
     </div>
     <div class="grid2">
       <div class="field"><label for="hourly" data-i="hourly">현재 시급 (CAD, 선택)</label><input id="hourly" type="number" inputmode="decimal" step="0.01" data-ph="phHourly" placeholder="예) 34.91"></div>
@@ -281,12 +281,12 @@ details .grid2{margin-top:12px}
   <p class="legal" data-i="disc"></p>
   <section class="panel upd" aria-labelledby="h-upd">
     <div class="upd-row">
-      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.33</b> · 2026-11-21</div></div>
+      <div><h2 id="h-upd" data-i="updH">앱 업데이트</h2><div class="hint"><span data-i="updNow">지금 버전</span> <b id="curVer">v1.6.34</b> · 2026-11-21</div></div>
       <button type="button" class="apply" id="updBtn" data-i="updBtn">업데이트 확인</button>
     </div>
     <div class="hint" id="updStatus" aria-live="polite"></div>
   </section>
-  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.33</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
+  <p class="credit"><span class="nw">© 2026 <span data-i="title">나의 연금 계산기</span> v1.6.34</span> <span class="nw">· Developed by SEOKWOO KIM</span></p>
 </div>
 
 <script src="tess/tesseract.min.js"></script>
@@ -803,7 +803,7 @@ details .grid2{margin-top:12px}
 
 
   /* ---------- App update check ---------- */
-  const APP_VERSION = "1.6.33";
+  const APP_VERSION = "1.6.34";
   let latest = null, updState = null;
   const cmpVer = (a,b) => { const x=a.split(".").map(Number), y=b.split(".").map(Number); for (let i=0;i<3;i++){ if((x[i]||0)!==(y[i]||0)) return (x[i]||0)-(y[i]||0);} return 0; };
   function showUpd(){
